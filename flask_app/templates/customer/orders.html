@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Đơn hàng của tôi - Khách hàng{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h2><i class="fas fa-clipboard-list text-primary"></i> Đơn hàng của tôi</h2>
+    
+    {% if orders %}
+    <div class="row mt-4">
+        {% for order in orders %}
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <h5 class="card-title mb-1">Đơn hàng #{{ order.MaDH }}</h5>
+                            <small class="text-muted">
+                                <i class="fas fa-calendar"></i> {{ order.NgayTao.strftime('%d/%m/%Y %H:%M') }}
+                            </small>
+                        </div>
+                        <span class="badge 
+                            {% if order.TrangThai.value == 'pending' %}bg-warning
+                            {% elif order.TrangThai.value == 'processing' %}bg-info
+                            {% elif order.TrangThai.value == 'delivered' %}bg-success
+                            {% else %}bg-secondary{% endif %}">
+                            {% if order.TrangThai.value == 'pending' %}Chờ xử lý
+                            {% elif order.TrangThai.value == 'processing' %}Đang giao
+                            {% elif order.TrangThai.value == 'delivered' %}Đã giao
+                            {% else %}{{ order.TrangThai.value }}{% endif %}
+                        </span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <p class="mb-1"><i class="fas fa-map-marker-alt text-danger"></i> <strong>Địa chỉ:</strong></p>
+                        <p class="text-muted ms-4">{{ order.DiaChi }}</p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <p class="mb-2"><strong><i class="fas fa-box"></i> Sản phẩm:</strong></p>
+                        <ul class="list-unstyled ms-4">
+                            {% for ct in order.chi_tiets[:3] %}
+                            <li class="mb-1">
+                                <i class="fas fa-check-circle text-success"></i> 
+                                {{ ct.san_pham.TenSP }} - {{ ct.SoLuong }} {{ ct.san_pham.DonVi }}
+                            </li>
+                            {% endfor %}
+                            {% if order.chi_tiets|length > 3 %}
+                            <li class="text-muted">
+                                <i class="fas fa-ellipsis-h"></i> Và {{ order.chi_tiets|length - 3 }} sản phẩm khác
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Tổng tiền:</strong>
+                            <span class="text-primary fs-5">
+                                {{ "{:,.0f}".format(order.chi_tiets|sum(attribute='ThanhTien')) }}đ
+                            </span>
+                        </div>
+                        <div>
+                            <a href="{{ url_for('customer.order_detail', ma_dh=order.MaDH) }}" 
+                               class="btn btn-primary btn-sm">
+                                <i class="fas fa-eye"></i> Chi tiết
+                            </a>
+                            {% if order.TrangThai.value in ['processing', 'delivered'] %}
+                            <a href="{{ url_for('customer.track_order', ma_dh=order.MaDH) }}" 
+                               class="btn btn-success btn-sm">
+                                <i class="fas fa-map-marked-alt"></i> Theo dõi
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-clipboard-list fa-5x text-muted mb-3"></i>
+        <h4>Chưa có đơn hàng nào</h4>
+        <p class="text-muted">Bạn chưa đặt đơn hàng nào</p>
+        <a href="{{ url_for('customer.home') }}" class="btn btn-primary">
+            <i class="fas fa-shopping-bag"></i> Mua sắm ngay
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

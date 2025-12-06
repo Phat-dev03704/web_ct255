@@ -1,0 +1,59 @@
+==================================================================================
+   HƯỚNG DẪN GIAO DIỆN DÒNG LỆNH - OR-TOOLS (Google Optimization)
+==================================================================================
+
+OR-TOOLS: Solver optimization mạnh mẽ từ Google, có sẵn Routing solver
+chuyên dụng cho VRP. Thường cho kết quả rất tốt với tốc độ nhanh.
+
+[1] ORTOOLS_VRPTW_SOLVER.PY - Giải một dataset
+-----------------------------------------------------------
+Cú pháp:
+  python ortools_vrptw_solver.py <dataset_path> [options]
+
+Ví dụ:
+  # Cơ bản
+  python ortools_vrptw_solver.py ../../dataset/C1/C101.csv
+  
+  # Tùy chỉnh thời gian giải
+  python ortools_vrptw_solver.py ../../dataset/R1/R101.csv --time-limit 120
+  
+  # Tùy chỉnh search strategy
+  python ortools_vrptw_solver.py ../../dataset/RC1/RC101.csv --strategy GUIDED_LOCAL_SEARCH
+  
+  # Không lưu kết quả
+  python ortools_vrptw_solver.py ../../dataset/C1/C101.csv --no-save
+
+[2] TEST_ALL_DATASETS.PY - Test nhiều datasets
+-----------------------------------------------------------
+Cú pháp:
+  python test_all_datasets.py [options]
+
+Ví dụ:
+  # Test tất cả datasets
+  python test_all_datasets.py
+  
+  # Test với time limit khác
+  python test_all_datasets.py --time-limit 120
+  
+  # Test chỉ category C1
+  python test_all_datasets.py --category C1
+  
+  # Test 5 datasets đầu
+  python test_all_datasets.py --limit 5
+
+[3] THAM SỐ CHI TIẾT
+-----------------------------------------------------------
+--time-limit T       Giới hạn thời gian (giây, mặc định: 60)
+--strategy NAME      Search strategy (mặc định: AUTOMATIC)
+  - AUTOMATIC                  Tự động chọn strategy
+  - PATH_CHEAPEST_ARC         Greedy nearest neighbor
+  - GUIDED_LOCAL_SEARCH       Guided local search (tốt)
+  - SIMULATED_ANNEALING       Simulated annealing
+  - TABU_SEARCH              Tabu search
+  
+--capacity N         Sức chứa xe (mặc định: 200)
+--max-vehicles N     Số xe tối đa (mặc định: 25)
+--category C1 C2     Chỉ test các category cụ thể
+--limit N            Giới hạn số lượng datasets
+--no-save            Không lưu kết quả
+

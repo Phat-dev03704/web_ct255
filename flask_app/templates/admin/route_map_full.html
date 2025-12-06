@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bản đồ tuyến {{ van_chuyen.MaVC }} - Admin</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        body { margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        #map { position: absolute; top: 60px; bottom: 0; left: 0; right: 0; }
+        .header-bar {
+            position: fixed; top: 0; left: 0; right: 0; height: 60px;
+            background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); z-index: 1000;
+            display: flex; align-items: center; padding: 0 20px;
+        }
+        .legend-box {
+            position: fixed; bottom: 80px; right: 10px; z-index: 999;
+            background: rgba(255,255,255,0.95); padding: 12px; border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3); font-size: 13px; max-width: 250px;
+        }
+        .stats-box {
+            position: fixed; bottom: 20px; left: 10px; z-index: 999;
+            background: rgba(255,255,255,0.95); padding: 12px; border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3); font-size: 13px;
+        }
+        .color-bar { width: 20px; height: 4px; margin-right: 8px; border: 1px solid #333; }
+    </style>
+</head>
+<body>
+    <div class="header-bar">
+        <a href="{{ url_for('admin.routes') }}" class="btn btn-secondary btn-sm">
+            <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+        <h4 class="ms-3 mb-0"><i class="fas fa-map text-primary"></i> Bản đồ tuyến {{ van_chuyen.MaVC }}</h4>
+    </div>
+
+    <div id="map"></div>
+    
+    <div class="legend-box">
+        <b><i class="fas fa-info-circle"></i> Chú thích</b><br/>
+        <div style="margin-top: 8px;">
+            <div style="display:flex; align-items:center; margin:4px 0;">
+                <div style="width:20px; height:20px; background:#dc3545; border-radius:50%; border:2px solid white; box-shadow:0 0 4px rgba(0,0,0,0.4); margin-right:8px;"></div>
+                <span>Kho</span>
+            </div>
+            {% set color_list = ['#007bff', '#28a745', '#dc3545', '#ffc107', '#17a2b8', '#6f42c1', '#fd7e14', '#e83e8c'] %}
+            {% for ctvc in van_chuyen.ct_van_chuyens %}
+            <div style="display:flex; align-items:center; margin:4px 0;">
+                <div class="color-bar" style="background:{{ color_list[loop.index0 % color_list|length] }};"></div>
+                <span>{{ ctvc.tai_xe.TenTX if ctvc.tai_xe else 'Xe ' ~ loop.index }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="stats-box">
+        <b><i class="fas fa-chart-bar"></i> Thống kê</b><br/>
+        <div style="margin-top: 6px;">
+            Số xe: <b>{{ van_chuyen.ct_van_chuyens|length }}</b><br/>
+            Tổng quãng đường: <b>{{ "{:.2f}".format(van_chuyen.TongQuangDuong) if van_chuyen.TongQuangDuong else '0.00' }} km</b><br/>
+            Tổng đơn hàng: <b>{{ van_chuyen.TongDonHang }}</b>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-textpath@1.2.3/leaflet.textpath.min.js"></script>
+    <script>
+        // Khởi tạo bản đồ
+        const depotLat = 10.030874;
+        const depotLon = 105.768299;
+        const map = L.map('map').setView([depotLat, depotLon], 13);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 19
+        }).addTo(map);
+        
+        // Marker depot
+        const depotIcon = L.divIcon({
+            className: 'custom-div-icon',
+            html: "<div style='background-color:#dc3545; width:24px; height:24px; border-radius:50%; border:3px solid white; box-shadow:0 0 6px rgba(0,0,0,0.5);'></div>",
+            iconSize: [24, 24],
+            iconAnchor: [12, 12]
+        });
+        
+        L.marker([depotLat, depotLon], {icon: depotIcon})
+            .bindPopup('<b><i class="fas fa-warehouse"></i> Kho trung tâm</b><br/>DHCT - Ninh Kiều')
+            .addTo(map);
+        
+        const colors = ['#007bff', '#28a745', '#dc3545', '#ffc107', '#17a2b8', '#6f42c1', '#fd7e14', '#e83e8c'];
+        const allBounds = [[depotLat, depotLon]];
+        
+        // Vẽ từng tuyến đường
+        {% for ctvc in van_chuyen.ct_van_chuyens %}
+        (function() {
+            const vehicleColor = colors[{{ loop.index0 }} % colors.length];
+            const vehicleName = '{{ ctvc.tai_xe.TenTX if ctvc.tai_xe else "Xe " ~ loop.index }}';
+            const vehiclePlate = '{{ ctvc.tai_xe.BienSoXe if ctvc.tai_xe else "N/A" }}';
+            const routePoints = [[depotLat, depotLon]]; // Bắt đầu từ kho
+            
+            // Label cho xe
+            L.marker([depotLat + 0.002 * {{ loop.index0 }}, depotLon], {
+                icon: L.divIcon({
+                    className: 'vehicle-label',
+                    html: `<div style='font-size:12px; color:${vehicleColor}; font-weight:bold; background:rgba(255,255,255,0.9); padding:2px 6px; border-radius:4px; border:1px solid ${vehicleColor};'>${vehicleName}</div>`,
+                    iconSize: [100, 20],
+                    iconAnchor: [0, 0]
+                })
+            }).addTo(map);
+            
+            {% for dh_ctvc in ctvc.donhang_ctvcs|sort(attribute='ThuTu') %}
+            {% if dh_ctvc.don_hang.Lat and dh_ctvc.don_hang.Lon %}
+            {
+                const lat = {{ dh_ctvc.don_hang.Lat }};
+                const lon = {{ dh_ctvc.don_hang.Lon }};
+                const sequence = {{ dh_ctvc.ThuTu }};
+                routePoints.push([lat, lon]);
+                allBounds.push([lat, lon]);
+                
+                // Circle marker cho điểm giao hàng
+                const marker = L.circleMarker([lat, lon], {
+                    color: vehicleColor,
+                    fillColor: vehicleColor,
+                    fillOpacity: 0.8,
+                    radius: 10,
+                    weight: 3
+                }).addTo(map);
+                
+                // Popup với thông tin chi tiết
+                marker.bindPopup(`
+                    <b>${vehicleName} - Điểm ${sequence}</b><br/>
+                    <i class="fas fa-box"></i> Đơn: {{ dh_ctvc.don_hang.MaDH }}<br/>
+                    <i class="fas fa-user"></i> KH: {{ dh_ctvc.don_hang.nguoi_dung.TenND if dh_ctvc.don_hang.nguoi_dung else 'N/A' }}<br/>
+                    <i class="fas fa-map-marker-alt"></i> {{ dh_ctvc.don_hang.DiaChi[:50] }}...
+                `);
+                
+                // Tooltip hiện khi hover
+                marker.bindTooltip(`
+                    <b>{{ dh_ctvc.don_hang.MaDH }}</b><br/>
+                    Thứ tự: ${sequence}
+                `, {sticky: true});
+                
+                // Số thứ tự trên marker
+                L.marker([lat, lon], {
+                    icon: L.divIcon({
+                        className: 'sequence-number',
+                        html: `<div style='font-size:11px; color:white; font-weight:bold; text-align:center;'>${sequence}</div>`,
+                        iconSize: [20, 20],
+                        iconAnchor: [10, 10]
+                    }),
+                    interactive: false
+                }).addTo(map);
+            }
+            {% endif %}
+            {% endfor %}
+            
+            // Quay về kho
+            routePoints.push([depotLat, depotLon]);
+            
+            // Vẽ đường đi thực tế bằng OSRM
+            if (routePoints.length > 2) {
+                // Build OSRM request: lon,lat;lon,lat;...
+                const coords = routePoints.map(p => `${p[1]},${p[0]}`).join(';');
+                const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${coords}?overview=full&geometries=geojson`;
+                
+                fetch(osrmUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.code === 'Ok' && data.routes && data.routes.length > 0) {
+                            const route = data.routes[0];
+                            const distance = (route.distance / 1000).toFixed(2); // km
+                            
+                            // Convert coordinates từ [lon,lat] sang [lat,lon]
+                            const routeCoords = route.geometry.coordinates.map(coord => [coord[1], coord[0]]);
+                            
+                            // Vẽ polyline theo đường thực tế
+                            const polyline = L.polyline(routeCoords, {
+                                color: vehicleColor,
+                                weight: 4,
+                                opacity: 0.7
+                            }).addTo(map);
+                            
+                            // Thêm mũi tên chỉ hướng
+                            polyline.setText('  ►  ', {
+                                repeat: true,
+                                offset: 8,
+                                attributes: {
+                                    fill: vehicleColor,
+                                    'font-weight': 'bold',
+                                    'font-size': '14'
+                                }
+                            });
+                            
+                            polyline.bindPopup(`
+                                <b>${vehicleName}</b><br/>
+                                <i class="fas fa-car"></i> ${vehiclePlate}<br/>
+                                <i class="fas fa-route"></i> <b>${distance} km</b> (đường thực tế)<br/>
+                                <i class="fas fa-box"></i> {{ ctvc.donhang_ctvcs|length }} đơn hàng
+                            `);
+                        } else {
+                            console.warn('OSRM failed for vehicle:', vehicleName);
+                            drawStraightLine(routePoints, vehicleColor, vehicleName, vehiclePlate);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('OSRM error:', error);
+                        drawStraightLine(routePoints, vehicleColor, vehicleName, vehiclePlate);
+                    });
+            }
+            
+            // Hàm vẽ đường thẳng dự phòng
+            function drawStraightLine(points, color, name, plate) {
+                const polyline = L.polyline(points, {
+                    color: color,
+                    weight: 4,
+                    opacity: 0.7,
+                    dashArray: '10, 5'
+                }).addTo(map);
+                
+                let totalDist = 0;
+                for (let i = 0; i < points.length - 1; i++) {
+                    totalDist += map.distance(points[i], points[i + 1]);
+                }
+                
+                polyline.bindPopup(`
+                    <b>${name}</b><br/>
+                    <i class="fas fa-car"></i> ${plate}<br/>
+                    <i class="fas fa-route"></i> ~${(totalDist / 1000).toFixed(2)} km (ước tính)<br/>
+                    <i class="fas fa-box"></i> {{ ctvc.donhang_ctvcs|length }} đơn hàng
+                `);
+            }
+        })();
+        {% endfor %}
+        
+        // Fit map để hiện tất cả markers
+        if (allBounds.length > 0) {
+            map.fitBounds(allBounds, {padding: [50, 50]});
+        }
+        
+        console.log('Map loaded with {{ van_chuyen.ct_van_chuyens|length }} vehicles');
+    </script>
+</body>
+</html>

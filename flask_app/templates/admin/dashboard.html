@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid my-4">
+    <h2 class="mb-4"><i class="fas fa-tachometer-alt"></i> Dashboard Quản trị</h2>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white shadow">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5>Tổng đơn hàng</h5>
+                            <h2>{{ total_orders }}</h2>
+                        </div>
+                        <i class="fas fa-shopping-bag fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white shadow">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5>Chờ xử lý</h5>
+                            <h2>{{ pending_orders }}</h2>
+                        </div>
+                        <i class="fas fa-clock fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white shadow">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5>Sản phẩm</h5>
+                            <h2>{{ total_products }}</h2>
+                        </div>
+                        <i class="fas fa-apple-alt fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white shadow">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5>Tài xế</h5>
+                            <h2>{{ total_drivers }}</h2>
+                        </div>
+                        <i class="fas fa-user-tie fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="fas fa-bolt"></i> Thao tác nhanh</h5>
+                </div>
+                <div class="card-body">
+                    <div class="btn-group" role="group">
+                        <a href="{{ url_for('admin.orders') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-list"></i> Quản lý đơn hàng
+                        </a>
+                        <a href="{{ url_for('admin.products') }}" class="btn btn-outline-success">
+                            <i class="fas fa-box"></i> Quản lý sản phẩm
+                        </a>
+                        <a href="{{ url_for('admin.drivers') }}" class="btn btn-outline-info">
+                            <i class="fas fa-users"></i> Quản lý tài xế
+                        </a>
+                        <a href="{{ url_for('admin.routes') }}" class="btn btn-outline-warning">
+                            <i class="fas fa-route"></i> Tuyến đường
+                        </a>
+                        <a href="{{ url_for('admin.optimize') }}" class="btn btn-danger">
+                            <i class="fas fa-magic"></i> Tối ưu tuyến
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-history"></i> Đơn hàng gần đây</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Mã ĐH</th>
+                                    <th>Khách hàng</th>
+                                    <th>Ngày tạo</th>
+                                    <th>Tổng tiền</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in recent_orders %}
+                                <tr>
+                                    <td><strong>{{ order.MaDH }}</strong></td>
+                                    <td>{{ order.nguoi_dung.TenND }}</td>
+                                    <td>{{ order.NgayTao.strftime('%d/%m/%Y %H:%M') }}</td>
+                                    <td>{{ "{:,.0f}".format(order.TongTien) }}đ</td>
+                                    <td>
+                                        {% if order.TrangThai.value == 'pending' %}
+                                            <span class="badge bg-warning">Chờ xử lý</span>
+                                        {% elif order.TrangThai.value == 'assigned' %}
+                                            <span class="badge bg-info">Đã phân công</span>
+                                        {% elif order.TrangThai.value == 'delivering' %}
+                                            <span class="badge bg-primary">Đang giao</span>
+                                        {% elif order.TrangThai.value == 'delivered' %}
+                                            <span class="badge bg-success">Đã giao</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ order.TrangThai.value }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-info" onclick="viewOrder('{{ order.MaDH }}')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.opacity-50 {
+    opacity: 0.5;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function viewOrder(maDH) {
+    window.location.href = '/admin/orders/' + maDH;
+}
+</script>
+{% endblock %}

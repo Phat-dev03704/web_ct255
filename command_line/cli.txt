@@ -1,0 +1,42 @@
+==================================================================================
+                    HƯỚNG DẪN SỬ DỤNG - VRPTW VISUALIZATION
+==================================================================================
+
+[1] TRỰC QUAN HÓA 1 DATASET (visualize_vrptw.py)
+----------------------------------------------------------------------------------
+Cú pháp:  python visualize_vrptw.py <file_dataset> [options]
+
+Ví dụ thường dùng:
+  cd "visualize dataset"
+  python visualize_vrptw.py ../dataset/C1/C101.csv              # Hiển thị biểu đồ
+  python visualize_vrptw.py ../dataset/C1/C101.csv --save       # Lưu file ảnh
+  python visualize_vrptw.py ../dataset/C1/C101.csv --stats-only # Chỉ in thống kê
+ 
+Tùy chọn nâng cao:
+  --plot-type locations    # Chỉ tạo biểu đồ vị trí khách hàng
+  --plot-type time_windows # Chỉ tạo Gantt chart thời gian
+  --report-only            # Chỉ tạo file báo cáo TXT
+  --help                   # Xem tất cả tùy chọn
+
+
+[2] TRỰC QUAN HÓA HÀNG LOẠT (visualize_all_datasets.py)
+----------------------------------------------------------------------------------
+Cú pháp:  python visualize_all_datasets.py [options]
+
+Ví dụ thường dùng:
+  python visualize_all_datasets.py                    # Xử lý tất cả datasets
+  python visualize_all_datasets.py --category C1      # Chỉ xử lý category C1
+  python visualize_all_datasets.py --limit 5          # Test với 5 datasets
+  python visualize_all_datasets.py -c C1 C2 -l 10     # C1+C2, giới hạn 10 files
+
+Tùy chọn nâng cao:
+  --category C1 R1 RC2     # Chọn nhiều categories
+  --continue-on-error      # Tiếp tục khi có lỗi
+  --help                   # Xem tất cả tùy chọn
+
+
+[3] OUTPUT:
+  visualize dataset images/   Tất cả hình ảnh (.png)
+  visulize dataset txt/       Tất cả báo cáo (.txt)
+
+==================================================================================

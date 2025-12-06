@@ -1,0 +1,19 @@
+1.Hướng toán học
+    - Mixed Integer Linear Programming (MILP) - Lập trình tuyến tính hỗn hợp
+    - Constraint Programming (CP) : Lập trình gàng buộc
+2.Hướng Heuristic và metaheuristic:
+    - Clarke & Wright Savings Algorithm : Thuật toán tiết kiệm Clarke & Wright
+    - Sweep Algorithm : Thuật toán quét
+    - Local Search / Neighborhood Search : Tìm kiếm cục bộ / Tìm kiếm lân cận
+    - Tabu Search : Tìm kiếm Tabu
+    - Simulated Annealing : Thuật toán luyện kim
+    - Genetic Algorithm : Thuật toán di truyền
+    - Ant Colony Optimization : Thuật toán tối ưu đàn kiến
+    - Particle Swarm Optimization : Thuật toán tối ưu bầy đàn
+    - Large Neighborhood Search : Tìm kiếm lân cận lớn
+3.Hướng học máy và deep learning
+    - Reinforcement Learning : Học tăng cường
+    - Neural Combinatorial Optimization (NCO) : Tối ưu tổ hợp bằng mạng noron
+    - Hybrid methods(Kết hợp):
+        + Dùng RL để chọn tham số cho LNS
+        + Dùng GA tạo nghiệm khởi tạo, rồi cải thiện bằng TS

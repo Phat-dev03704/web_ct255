@@ -1,0 +1,623 @@
+====================================================================================================
+BÁO CÁO TỔNG HỢP - LARGE NEIGHBORHOOD SEARCH FOR VRPTW
+====================================================================================================
+
+Tổng số datasets: 56
+Thành công: 55
+Thất bại: 1
+
+====================================================================================================
+THỐNG KÊ THEO CATEGORY
+====================================================================================================
+
+
+C1:
+  Số datasets: 8
+  Trung bình quãng đường: 1028.15
+  Trung bình số xe: 11.75
+  Trung bình thời gian: 63.52s
+  Trung bình iterations: 29.1
+  Trung bình improvements: 12.6
+
+C2:
+  Số datasets: 8
+  Trung bình quãng đường: 1088.79
+  Trung bình số xe: 10.00
+  Trung bình thời gian: 60.61s
+  Trung bình iterations: 47.5
+  Trung bình improvements: 17.0
+
+R1:
+  Số datasets: 12
+  Trung bình quãng đường: 1351.45
+  Trung bình số xe: 15.00
+  Trung bình thời gian: 61.60s
+  Trung bình iterations: 36.6
+  Trung bình improvements: 14.5
+
+R2:
+  Số datasets: 11
+  Trung bình quãng đường: 1134.20
+  Trung bình số xe: 8.64
+  Trung bình thời gian: 61.33s
+  Trung bình iterations: 26.6
+  Trung bình improvements: 12.3
+
+RC1:
+  Số datasets: 8
+  Trung bình quãng đường: 1550.06
+  Trung bình số xe: 15.25
+  Trung bình thời gian: 61.72s
+  Trung bình iterations: 38.2
+  Trung bình improvements: 13.2
+
+RC2:
+  Số datasets: 8
+  Trung bình quãng đường: 1342.78
+  Trung bình số xe: 10.12
+  Trung bình thời gian: 61.59s
+  Trung bình iterations: 43.4
+  Trung bình improvements: 13.2
+
+
+====================================================================================================
+CHI TIẾT TỪNG DATASET
+====================================================================================================
+
+C101:
+  Category: C1
+  Status: Feasible
+  Số xe: 12
+  Tổng quãng đường: 895.72
+  Thời gian: 60.79s
+  Iterations: 33
+  Improvements: 14
+  Hyperparameters: max_iter=150, destroy=10-25
+
+C102:
+  Category: C1
+  Status: Feasible
+  Số xe: 11
+  Tổng quãng đường: 861.13
+  Thời gian: 64.88s
+  Iterations: 35
+  Improvements: 16
+  Hyperparameters: max_iter=150, destroy=10-25
+
+C103:
+  Category: C1
+  Status: Feasible
+  Số xe: 11
+  Tổng quãng đường: 1155.00
+  Thời gian: 62.45s
+  Iterations: 17
+  Improvements: 7
+  Hyperparameters: max_iter=150, destroy=10-25
+
+C104:
+  Category: C1
+  Status: Error: '<' not supported between instances of 'numpy.ndar
+
+C105:
+  Category: C1
+  Status: Feasible
+  Số xe: 13
+  Tổng quãng đường: 1069.49
+  Thời gian: 66.18s
+  Iterations: 27
+  Improvements: 15
+  Hyperparameters: max_iter=150, destroy=10-25
+
+C106:
+  Category: C1
+  Status: Feasible
+  Số xe: 11
+  Tổng quãng đường: 1063.89
+  Thời gian: 60.81s
+  Iterations: 34
+  Improvements: 13
+  Hyperparameters: max_iter=150, destroy=10-25
+
+C107:
+  Category: C1
+  Status: Feasible
+  Số xe: 12
+  Tổng quãng đường: 966.70
+  Thời gian: 62.48s
+  Iterations: 28
+  Improvements: 15
+  Hyperparameters: max_iter=150, destroy=10-25
+
+C108:
+  Category: C1
+  Status: Feasible
+  Số xe: 13
+  Tổng quãng đường: 1059.47
+  Thời gian: 62.13s
+  Iterations: 26
+  Improvements: 13
+  Hyperparameters: max_iter=150, destroy=10-25
+
+C109:
+  Category: C1
+  Status: Feasible
+  Số xe: 11
+  Tổng quãng đường: 1153.80
+  Thời gian: 68.44s
+  Iterations: 33
+  Improvements: 8
+  Hyperparameters: max_iter=150, destroy=10-25
+
+C201:
+  Category: C2
+  Status: Feasible
+  Số xe: 10
+  Tổng quãng đường: 1036.66
+  Thời gian: 60.75s
+  Iterations: 55
+  Improvements: 14
+  Hyperparameters: max_iter=150, destroy=10-25
+
+C202:
+  Category: C2
+  Status: Feasible
+  Số xe: 10
+  Tổng quãng đường: 1020.95
+  Thời gian: 60.92s
+  Iterations: 37
+  Improvements: 19
+  Hyperparameters: max_iter=150, destroy=10-25
+
+C203:
+  Category: C2
+  Status: Feasible
+  Số xe: 10
+  Tổng quãng đường: 1052.25
+  Thời gian: 60.37s
+  Iterations: 40
+  Improvements: 24
+  Hyperparameters: max_iter=150, destroy=10-25
+
+C204:
+  Category: C2
+  Status: Feasible
+  Số xe: 10
+  Tổng quãng đường: 1076.78
+  Thời gian: 60.77s
+  Iterations: 54
+  Improvements: 14
+  Hyperparameters: max_iter=150, destroy=10-25
+
+C205:
+  Category: C2
+  Status: Feasible
+  Số xe: 10
+  Tổng quãng đường: 1086.46
+  Thời gian: 61.30s
+  Iterations: 54
+  Improvements: 18
+  Hyperparameters: max_iter=150, destroy=10-25
+
+C206:
+  Category: C2
+  Status: Feasible
+  Số xe: 10
+  Tổng quãng đường: 1172.37
+  Thời gian: 60.41s
+  Iterations: 57
+  Improvements: 11
+  Hyperparameters: max_iter=150, destroy=10-25
+
+C207:
+  Category: C2
+  Status: Feasible
+  Số xe: 10
+  Tổng quãng đường: 1150.97
+  Thời gian: 60.12s
+  Iterations: 40
+  Improvements: 17
+  Hyperparameters: max_iter=150, destroy=10-25
+
+C208:
+  Category: C2
+  Status: Feasible
+  Số xe: 10
+  Tổng quãng đường: 1113.88
+  Thời gian: 60.22s
+  Iterations: 43
+  Improvements: 19
+  Hyperparameters: max_iter=150, destroy=10-25
+
+R101:
+  Category: R1
+  Status: Feasible
+  Số xe: 20
+  Tổng quãng đường: 1811.47
+  Thời gian: 60.49s
+  Iterations: 47
+  Improvements: 18
+  Hyperparameters: max_iter=150, destroy=10-25
+
+R102:
+  Category: R1
+  Status: Feasible
+  Số xe: 19
+  Tổng quãng đường: 1508.90
+  Thời gian: 61.50s
+  Iterations: 48
+  Improvements: 24
+  Hyperparameters: max_iter=150, destroy=10-25
+
+R103:
+  Category: R1
+  Status: Feasible
+  Số xe: 15
+  Tổng quãng đường: 1375.28
+  Thời gian: 61.71s
+  Iterations: 36
+  Improvements: 15
+  Hyperparameters: max_iter=150, destroy=10-25
+
+R104:
+  Category: R1
+  Status: Feasible
+  Số xe: 12
+  Tổng quãng đường: 1150.93
+  Thời gian: 64.10s
+  Iterations: 33
+  Improvements: 11
+  Hyperparameters: max_iter=150, destroy=10-25
+
+R105:
+  Category: R1
+  Status: Feasible
+  Số xe: 18
+  Tổng quãng đường: 1535.48
+  Thời gian: 61.51s
+  Iterations: 46
+  Improvements: 12
+  Hyperparameters: max_iter=150, destroy=10-25
+
+R106:
+  Category: R1
+  Status: Feasible
+  Số xe: 15
+  Tổng quãng đường: 1409.10
+  Thời gian: 61.21s
+  Iterations: 55
+  Improvements: 17
+  Hyperparameters: max_iter=150, destroy=10-25
+
+R107:
+  Category: R1
+  Status: Feasible
+  Số xe: 14
+  Tổng quãng đường: 1287.76
+  Thời gian: 60.58s
+  Iterations: 20
+  Improvements: 11
+  Hyperparameters: max_iter=150, destroy=10-25
+
+R108:
+  Category: R1
+  Status: Feasible
+  Số xe: 11
+  Tổng quãng đường: 1112.46
+  Thời gian: 60.38s
+  Iterations: 30
+  Improvements: 12
+  Hyperparameters: max_iter=150, destroy=10-25
+
+R109:
+  Category: R1
+  Status: Feasible
+  Số xe: 16
+  Tổng quãng đường: 1368.12
+  Thời gian: 60.94s
+  Iterations: 37
+  Improvements: 17
+  Hyperparameters: max_iter=150, destroy=10-25
+
+R110:
+  Category: R1
+  Status: Feasible
+  Số xe: 14
+  Tổng quãng đường: 1327.15
+  Thời gian: 62.44s
+  Iterations: 25
+  Improvements: 13
+  Hyperparameters: max_iter=150, destroy=10-25
+
+R111:
+  Category: R1
+  Status: Feasible
+  Số xe: 14
+  Tổng quãng đường: 1207.60
+  Thời gian: 60.10s
+  Iterations: 34
+  Improvements: 15
+  Hyperparameters: max_iter=150, destroy=10-25
+
+R112:
+  Category: R1
+  Status: Feasible
+  Số xe: 12
+  Tổng quãng đường: 1123.11
+  Thời gian: 64.28s
+  Iterations: 28
+  Improvements: 9
+  Hyperparameters: max_iter=150, destroy=10-25
+
+R201:
+  Category: R2
+  Status: Feasible
+  Số xe: 11
+  Tổng quãng đường: 1351.19
+  Thời gian: 64.19s
+  Iterations: 17
+  Improvements: 13
+  Hyperparameters: max_iter=150, destroy=10-25
+
+R202:
+  Category: R2
+  Status: Feasible
+  Số xe: 8
+  Tổng quãng đường: 1190.31
+  Thời gian: 60.60s
+  Iterations: 30
+  Improvements: 13
+  Hyperparameters: max_iter=150, destroy=10-25
+
+R203:
+  Category: R2
+  Status: Feasible
+  Số xe: 9
+  Tổng quãng đường: 1203.13
+  Thời gian: 60.78s
+  Iterations: 38
+  Improvements: 15
+  Hyperparameters: max_iter=150, destroy=10-25
+
+R204:
+  Category: R2
+  Status: Feasible
+  Số xe: 9
+  Tổng quãng đường: 985.72
+  Thời gian: 60.46s
+  Iterations: 26
+  Improvements: 16
+  Hyperparameters: max_iter=150, destroy=10-25
+
+R205:
+  Category: R2
+  Status: Feasible
+  Số xe: 8
+  Tổng quãng đường: 1183.34
+  Thời gian: 60.02s
+  Iterations: 31
+  Improvements: 13
+  Hyperparameters: max_iter=150, destroy=10-25
+
+R206:
+  Category: R2
+  Status: Feasible
+  Số xe: 8
+  Tổng quãng đường: 1213.34
+  Thời gian: 60.28s
+  Iterations: 30
+  Improvements: 8
+  Hyperparameters: max_iter=150, destroy=10-25
+
+R207:
+  Category: R2
+  Status: Feasible
+  Số xe: 9
+  Tổng quãng đường: 1087.28
+  Thời gian: 60.49s
+  Iterations: 21
+  Improvements: 11
+  Hyperparameters: max_iter=150, destroy=10-25
+
+R208:
+  Category: R2
+  Status: Feasible
+  Số xe: 8
+  Tổng quãng đường: 1015.67
+  Thời gian: 60.85s
+  Iterations: 21
+  Improvements: 10
+  Hyperparameters: max_iter=150, destroy=10-25
+
+R209:
+  Category: R2
+  Status: Feasible
+  Số xe: 9
+  Tổng quãng đường: 1112.32
+  Thời gian: 61.11s
+  Iterations: 28
+  Improvements: 11
+  Hyperparameters: max_iter=150, destroy=10-25
+
+R210:
+  Category: R2
+  Status: Feasible
+  Số xe: 8
+  Tổng quãng đường: 1164.06
+  Thời gian: 60.10s
+  Iterations: 23
+  Improvements: 15
+  Hyperparameters: max_iter=150, destroy=10-25
+
+R211:
+  Category: R2
+  Status: Feasible
+  Số xe: 8
+  Tổng quãng đường: 969.87
+  Thời gian: 65.78s
+  Iterations: 28
+  Improvements: 10
+  Hyperparameters: max_iter=150, destroy=10-25
+
+RC101:
+  Category: RC1
+  Status: Feasible
+  Số xe: 19
+  Tổng quãng đường: 1854.47
+  Thời gian: 61.00s
+  Iterations: 55
+  Improvements: 19
+  Hyperparameters: max_iter=150, destroy=10-25
+
+RC102:
+  Category: RC1
+  Status: Feasible
+  Số xe: 16
+  Tổng quãng đường: 1598.97
+  Thời gian: 60.49s
+  Iterations: 40
+  Improvements: 17
+  Hyperparameters: max_iter=150, destroy=10-25
+
+RC103:
+  Category: RC1
+  Status: Feasible
+  Số xe: 14
+  Tổng quãng đường: 1532.46
+  Thời gian: 61.37s
+  Iterations: 37
+  Improvements: 12
+  Hyperparameters: max_iter=150, destroy=10-25
+
+RC104:
+  Category: RC1
+  Status: Feasible
+  Số xe: 13
+  Tổng quãng đường: 1309.79
+  Thời gian: 61.09s
+  Iterations: 39
+  Improvements: 14
+  Hyperparameters: max_iter=150, destroy=10-25
+
+RC105:
+  Category: RC1
+  Status: Feasible
+  Số xe: 17
+  Tổng quãng đường: 1751.29
+  Thời gian: 60.75s
+  Iterations: 35
+  Improvements: 14
+  Hyperparameters: max_iter=150, destroy=10-25
+
+RC106:
+  Category: RC1
+  Status: Feasible
+  Số xe: 15
+  Tổng quãng đường: 1582.82
+  Thời gian: 62.29s
+  Iterations: 30
+  Improvements: 10
+  Hyperparameters: max_iter=150, destroy=10-25
+
+RC107:
+  Category: RC1
+  Status: Feasible
+  Số xe: 14
+  Tổng quãng đường: 1412.01
+  Thời gian: 61.50s
+  Iterations: 29
+  Improvements: 10
+  Hyperparameters: max_iter=150, destroy=10-25
+
+RC108:
+  Category: RC1
+  Status: Feasible
+  Số xe: 14
+  Tổng quãng đường: 1358.66
+  Thời gian: 65.26s
+  Iterations: 41
+  Improvements: 10
+  Hyperparameters: max_iter=150, destroy=10-25
+
+RC201:
+  Category: RC2
+  Status: Feasible
+  Số xe: 12
+  Tổng quãng đường: 1711.31
+  Thời gian: 63.95s
+  Iterations: 24
+  Improvements: 10
+  Hyperparameters: max_iter=150, destroy=10-25
+
+RC202:
+  Category: RC2
+  Status: Feasible
+  Số xe: 11
+  Tổng quãng đường: 1380.79
+  Thời gian: 61.92s
+  Iterations: 47
+  Improvements: 14
+  Hyperparameters: max_iter=150, destroy=10-25
+
+RC203:
+  Category: RC2
+  Status: Feasible
+  Số xe: 10
+  Tổng quãng đường: 1261.47
+  Thời gian: 62.89s
+  Iterations: 41
+  Improvements: 20
+  Hyperparameters: max_iter=150, destroy=10-25
+
+RC204:
+  Category: RC2
+  Status: Feasible
+  Số xe: 10
+  Tổng quãng đường: 1091.37
+  Thời gian: 61.49s
+  Iterations: 30
+  Improvements: 12
+  Hyperparameters: max_iter=150, destroy=10-25
+
+RC205:
+  Category: RC2
+  Status: Feasible
+  Số xe: 10
+  Tổng quãng đường: 1455.94
+  Thời gian: 61.07s
+  Iterations: 48
+  Improvements: 13
+  Hyperparameters: max_iter=150, destroy=10-25
+
+RC206:
+  Category: RC2
+  Status: Feasible
+  Số xe: 9
+  Tổng quãng đường: 1481.76
+  Thời gian: 60.07s
+  Iterations: 55
+  Improvements: 8
+  Hyperparameters: max_iter=150, destroy=10-25
+
+RC207:
+  Category: RC2
+  Status: Feasible
+  Số xe: 10
+  Tổng quãng đường: 1293.17
+  Thời gian: 61.03s
+  Iterations: 54
+  Improvements: 17
+  Hyperparameters: max_iter=150, destroy=10-25
+
+RC208:
+  Category: RC2
+  Status: Feasible
+  Số xe: 9
+  Tổng quãng đường: 1066.41
+  Thời gian: 60.29s
+  Iterations: 48
+  Improvements: 12
+  Hyperparameters: max_iter=150, destroy=10-25
+
+====================================================================================================
+KẾT THÚC BÁO CÁO
+====================================================================================================

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Sửa Tài Xế{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-edit"></i> Sửa Thông Tin Tài Xế
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('admin.edit_driver', ma_tx=driver.MaTX) }}">
+                        <div class="mb-3">
+                            <label class="form-label">Mã Tài Xế</label>
+                            <input type="text" class="form-control" value="{{ driver.MaTX }}" disabled>
+                            <small class="text-muted">Không thể thay đổi mã tài xế</small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="ten_tx" class="form-label">Tên Tài Xế <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="ten_tx" name="ten_tx" 
+                                   value="{{ driver.TenTX }}" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="sdt" class="form-label">Số Điện Thoại <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="sdt" name="sdt" 
+                                   value="{{ driver.SDT }}" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="bien_so_xe" class="form-label">Biển Số Xe <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="bien_so_xe" name="bien_so_xe" 
+                                   value="{{ driver.BienSoXe }}" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="suc_chua" class="form-label">Sức Chứa (kg) <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="suc_chua" name="suc_chua" 
+                                   value="{{ driver.SucChua }}" min="1" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="trang_thai" class="form-label">Trạng Thái</label>
+                            <select class="form-select" id="trang_thai" name="trang_thai">
+                                <option value="available" {% if driver.TrangThai == 'available' %}selected{% endif %}>Sẵn sàng</option>
+                                <option value="busy" {% if driver.TrangThai == 'busy' %}selected{% endif %}>Đang giao</option>
+                                <option value="off" {% if driver.TrangThai == 'off' %}selected{% endif %}>Nghỉ</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Username</label>
+                            <input type="text" class="form-control" value="{{ driver.username }}" disabled>
+                            <small class="text-muted">Không thể thay đổi username</small>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('admin.drivers') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Quay lại
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Lưu Thay Đổi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

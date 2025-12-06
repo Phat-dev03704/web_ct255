@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard Tài xế{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h2 class="mb-4"><i class="fas fa-shipping-fast"></i> Dashboard Tài xế</h2>
+
+    <!-- Driver Info -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card bg-primary text-white shadow-sm">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h4><i class="fas fa-user-circle"></i> {{ tai_xe.TenTX }}</h4>
+                            <p class="mb-1"><i class="fas fa-car"></i> Biển số: <strong>{{ tai_xe.BienSoXe }}</strong></p>
+                            <p class="mb-0"><i class="fas fa-box"></i> Sức chứa: <strong>{{ tai_xe.SucChua }} kg</strong></p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <span class="badge bg-success fs-5">
+                                <i class="fas fa-circle"></i> {{ tai_xe.TrangThai.value }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assigned Routes -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-route"></i> Tuyến được phân công</h5>
+                </div>
+                <div class="card-body">
+                    {% if ct_van_chuyens %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Tuyến</th>
+                                    <th>Ngày giao</th>
+                                    <th>Trạng thái</th>
+                                    <th>Tiến độ</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for ctvc in ct_van_chuyens %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ ctvc.van_chuyen.TenTuyen }}</strong><br>
+                                        <small class="text-muted">{{ ctvc.MaVC }}</small>
+                                    </td>
+                                    <td>{{ ctvc.NgayGiao.strftime('%d/%m/%Y') if ctvc.NgayGiao else 'Chưa xác định' }}</td>
+                                    <td>
+                                        {% if ctvc.TrangThai.value == 'assigned' %}
+                                            <span class="badge bg-warning">Đã phân công</span>
+                                        {% elif ctvc.TrangThai.value == 'in_progress' %}
+                                            <span class="badge bg-primary">Đang giao</span>
+                                        {% elif ctvc.TrangThai.value == 'completed' %}
+                                            <span class="badge bg-success">Hoàn thành</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% set total_orders = ctvc.donhang_ctvcs | length %}
+                                        {% set delivered_orders = ctvc.donhang_ctvcs | selectattr('TrangThai.value', 'equalto', 'delivered') | list | length %}
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" 
+                                                 style="width: {{ (delivered_orders / total_orders * 100) if total_orders > 0 else 0 }}%">
+                                                {{ delivered_orders }}/{{ total_orders }}
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('driver.route_detail', ctvc_id=ctvc.id) }}" 
+                                           class="btn btn-sm btn-primary">
+                                            <i class="fas fa-map-marked-alt"></i> Xem chi tiết
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-truck-loading fa-4x text-muted mb-3"></i>
+                        <h5>Chưa có tuyến nào được phân công</h5>
+                        <p class="text-muted">Vui lòng chờ admin phân công tuyến giao hàng</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

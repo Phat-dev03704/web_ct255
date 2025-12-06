@@ -1,0 +1,25 @@
+# VRP System Requirements
+# Python 3.8+
+
+# Flask Framework
+Flask==3.0.0
+Flask-SQLAlchemy==3.1.1
+
+# Database
+PyMySQL==1.1.0
+cryptography==41.0.7
+
+# OR-Tools for VRP optimization
+ortools>=9.8
+
+# Security
+Werkzeug==3.0.1
+bcrypt==4.1.2
+
+# Utilities
+python-dotenv==1.0.0
+requests==2.31.0
+
+# Optional: Development tools
+# Flask-DebugToolbar==0.14.1
+# Flask-Migrate==4.0.5

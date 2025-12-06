@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+
+{% block title %}Theo dõi đơn hàng #{{ order.MaDH }} - Khách hàng{% endblock %}
+
+{% block content %}
+<div class="container-fluid my-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-map-marked-alt text-success"></i> Theo dõi đơn hàng #{{ order.MaDH }}</h2>
+        <a href="{{ url_for('customer.order_detail', ma_dh=order.MaDH) }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+    </div>
+    
+    <div class="row">
+        <!-- Bản đồ -->
+        <div class="col-md-9">
+            <div class="card shadow-sm">
+                <div class="card-body p-0">
+                    <div id="map" style="height: 600px;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Thông tin -->
+        <div class="col-md-3">
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-success text-white">
+                    <h6 class="mb-0"><i class="fas fa-truck"></i> Tài xế</h6>
+                </div>
+                <div class="card-body">
+                    <p class="mb-1"><strong>{{ ctvc.tai_xe.TenTX }}</strong></p>
+                    <p class="mb-1 text-muted"><i class="fas fa-phone"></i> {{ ctvc.tai_xe.SDT }}</p>
+                    <p class="mb-0 text-muted"><i class="fas fa-car"></i> {{ ctvc.tai_xe.BienSoXe }}</p>
+                </div>
+            </div>
+            
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-info text-white">
+                    <h6 class="mb-0"><i class="fas fa-map-marker-alt"></i> Địa chỉ của bạn</h6>
+                </div>
+                <div class="card-body">
+                    <p class="mb-0 small">{{ order.DiaChi }}</p>
+                </div>
+            </div>
+            
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h6 class="mb-0"><i class="fas fa-route"></i> Tuyến giao hàng</h6>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush" id="routeList">
+                        {% for item in all_orders %}
+                        <div class="list-group-item {% if item.MaDH == order.MaDH %}active{% endif %}">
+                            <div class="d-flex align-items-center">
+                                <span class="badge bg-secondary me-2">{{ item.ThuTu }}</span>
+                                <div class="flex-grow-1">
+                                    <small class="fw-bold">{{ item.don_hang.nguoi_dung.TenND }}</small>
+                                    <br>
+                                    <small class="text-muted">{{ item.don_hang.DiaChi[:30] }}...</small>
+                                </div>
+                                {% if item.TrangThai.value == 'delivered' %}
+                                <i class="fas fa-check-circle text-success"></i>
+                                {% elif item.TrangThai.value == 'delivering' %}
+                                <i class="fas fa-shipping-fast text-info"></i>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card shadow-sm mt-3">
+                <div class="card-body text-center">
+                    <button class="btn btn-primary w-100" onclick="location.reload()">
+                        <i class="fas fa-sync-alt"></i> Làm mới
+                    </button>
+                    <small class="text-muted d-block mt-2">Bản đồ tự động cập nhật</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+try {
+    // Dữ liệu từ server
+    const customerLocation = {
+        lat: {{ order.Lat if order.Lat else 0 }},
+        lon: {{ order.Lon if order.Lon else 0 }},
+        name: "{{ order.nguoi_dung.TenND if order.nguoi_dung else '' }}",
+        address: "{{ order.DiaChi if order.DiaChi else '' }}"
+    };
+
+    console.log('Customer location:', customerLocation);
+
+    const allOrders = [
+        {% for item in all_orders %}
+        {
+            thuTu: {{ item.ThuTu }},
+            lat: {{ item.don_hang.Lat if item.don_hang.Lat else 0 }},
+            lon: {{ item.don_hang.Lon if item.don_hang.Lon else 0 }},
+            name: "{{ item.don_hang.nguoi_dung.TenND if item.don_hang.nguoi_dung else '' }}",
+            address: "{{ item.don_hang.DiaChi if item.don_hang.DiaChi else '' }}",
+            status: "{{ item.TrangThai.value if item.TrangThai else 'pending' }}",
+            isCustomer: {{ 'true' if item.MaDH == order.MaDH else 'false' }}
+        }{{ ',' if not loop.last else '' }}
+        {% endfor %}
+    ];
+
+    console.log('All orders:', allOrders);
+
+    // Validate data
+    if (!customerLocation.lat || !customerLocation.lon || customerLocation.lat === 0 || customerLocation.lon === 0) {
+        throw new Error('Không có thông tin tọa độ giao hàng');
+    }
+
+    // Khởi tạo bản đồ
+    const map = L.map('map').setView([customerLocation.lat, customerLocation.lon], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Icon cho khách hàng
+    const customerIcon = L.divIcon({
+        className: 'custom-div-icon',
+        html: `<div style="background-color: #ff6b6b; width: 40px; height: 40px; border-radius: 50%; 
+               display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; 
+               border: 3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);">
+               <i class="fas fa-home"></i></div>`,
+        iconSize: [40, 40],
+        iconAnchor: [20, 20]
+    });
+
+    // Icon cho điểm giao hàng khác
+    const deliveryIcon = (thuTu, status) => L.divIcon({
+        className: 'custom-div-icon',
+        html: `<div style="background-color: ${status === 'delivered' ? '#28a745' : '#007bff'}; 
+               width: 35px; height: 35px; border-radius: 50%; 
+               display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;
+               border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);">
+               ${thuTu}</div>`,
+        iconSize: [35, 35],
+        iconAnchor: [17, 17]
+    });
+
+    // Icon cho tài xế (xe tải)
+    const driverIcon = L.divIcon({
+        className: 'custom-div-icon',
+        html: `<div style="font-size: 30px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5));">🚚</div>`,
+        iconSize: [30, 30],
+        iconAnchor: [15, 15]
+    });
+
+    // Tìm vị trí đơn hàng của khách hàng trong danh sách
+    const customerOrderIndex = allOrders.findIndex(o => o.isCustomer);
+    const ordersUpToCustomer = allOrders.slice(0, customerOrderIndex + 1);
+
+    // Vẽ depot (kho)
+    const depotIcon = L.divIcon({
+        className: 'custom-div-icon',
+        html: `<div style="background-color: #dc3545; width: 45px; height: 45px; border-radius: 50%; 
+               display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; 
+               border: 3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);">
+               <i class="fas fa-warehouse"></i></div>`,
+        iconSize: [45, 45],
+        iconAnchor: [22, 22]
+    });
+
+    const depotMarker = L.marker([10.030874, 105.768299], {icon: depotIcon}).addTo(map);
+    depotMarker.bindPopup('<strong>🏢 Kho DHCT</strong><br><small>Điểm xuất phát</small>');
+
+    // Vẽ các điểm giao hàng (CHỈ TỚI ĐIỂM KHÁCH HÀNG)
+    ordersUpToCustomer.forEach(order => {
+        const icon = order.isCustomer ? customerIcon : deliveryIcon(order.thuTu, order.status);
+        const marker = L.marker([order.lat, order.lon], {icon: icon}).addTo(map);
+        
+        if (order.isCustomer) {
+            marker.bindPopup(`
+                <strong>📍 Vị trí của bạn</strong><br>
+                <small>Điểm giao thứ ${order.thuTu}</small><br>
+                <span class="badge ${order.status === 'delivered' ? 'bg-success' : order.status === 'delivering' ? 'bg-info' : 'bg-warning'}">
+                    ${order.status === 'delivered' ? 'Đã giao' : order.status === 'delivering' ? 'Đang giao' : 'Chờ giao'}
+                </span>
+            `).openPopup();
+        } else {
+            const statusText = order.status === 'delivered' ? 'Đã giao xong' : 'Chờ giao';
+            marker.bindTooltip(`Điểm ${order.thuTu} - ${statusText}`, {
+                permanent: false,
+                direction: 'top',
+                offset: [0, -10]
+            });
+        }
+    });
+
+    // Lấy điểm đã giao cuối cùng để đặt icon tài xế
+    const deliveredOrders = allOrders.filter(o => o.status === 'delivered');
+
+    if (deliveredOrders.length > 0) {
+        const lastDelivered = deliveredOrders[deliveredOrders.length - 1];
+        const driverMarker = L.marker([lastDelivered.lat, lastDelivered.lon], {icon: driverIcon}).addTo(map);
+        driverMarker.bindPopup(`
+            <strong>🚚 Tài xế: {{ ctvc.tai_xe.TenTX }}</strong><br>
+            <small>Đang ở điểm thứ ${lastDelivered.thuTu}</small><br>
+            <small class="text-muted">Đã giao xong ${deliveredOrders.length}/${allOrders.length} điểm</small>
+        `);
+    }
+
+    // Auto refresh every 30 seconds
+    setInterval(() => {
+        location.reload();
+    }, 30000);
+
+} catch (error) {
+    console.error('Error:', error);
+    document.getElementById('map').innerHTML = `
+        <div class="alert alert-danger m-3">
+            <strong>Lỗi:</strong> ${error.message}<br>
+            <small>Vui lòng thử lại sau hoặc liên hệ hỗ trợ</small>
+        </div>
+    `;
+}
+</script><style>
+.list-group-item.active {
+    background-color: #ff6b6b !important;
+    border-color: #ff6b6b !important;
+}
+</style>
+
+{% endblock %}

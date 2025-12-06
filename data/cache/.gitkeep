@@ -1,0 +1,2 @@
+# This file ensures the cache directory is tracked by Git
+# The directory will be created when cloning the repository

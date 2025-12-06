@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Thêm sản phẩm' if not product else 'Sửa sản phẩm' }} - Admin{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>
+            <i class="fas fa-box"></i> 
+            {{ 'Thêm sản phẩm mới' if not product else 'Sửa sản phẩm: ' + product.TenSP }}
+        </h2>
+        <a href="{{ url_for('admin.products') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Mã sản phẩm <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="ma_sp" 
+                                       value="{{ product.MaSP if product else '' }}"
+                                       {{ 'readonly' if product else 'required' }}>
+                                <small class="text-muted">Ví dụ: SP001, SP002...</small>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Tên sản phẩm <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="ten_sp" 
+                                       value="{{ product.TenSP if product else '' }}" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Mô tả</label>
+                            <textarea class="form-control" name="mo_ta" rows="3">{{ product.MoTa if product else '' }}</textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Tồn kho <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" name="ton_kho" 
+                                       value="{{ product.TonKho if product else '0' }}" 
+                                       min="0" required>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Đơn giá (VNĐ) <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" name="don_gia" 
+                                       value="{{ product.DonGia if product else '0' }}" 
+                                       min="0" step="1000" required>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Đơn vị <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="don_vi" 
+                                       value="{{ product.DonVi if product else 'kg' }}" required>
+                                <small class="text-muted">Ví dụ: kg, cái, hộp...</small>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Hình ảnh</label>
+                            <input type="text" class="form-control" name="hinh_anh" 
+                                   value="{{ product.HinhAnh if product else '' }}" 
+                                   placeholder="Tên file ảnh (vd: apple.png)">
+                            <small class="text-muted">Để trống sẽ dùng ảnh mặc định. File ảnh cần đặt trong static/images/products/</small>
+                            
+                            {% if product and product.HinhAnh %}
+                            <div class="mt-2">
+                                <img src="{{ url_for('static', filename='images/products/' + product.HinhAnh) }}" 
+                                     alt="{{ product.TenSP }}" 
+                                     class="img-thumbnail" 
+                                     style="max-width: 200px;"
+                                     onerror="this.src='{{ url_for('static', filename='images/products/default.png') }}'">
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('admin.products') }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Hủy
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> 
+                                {{ 'Thêm sản phẩm' if not product else 'Cập nhật' }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block title %}Chi tiết đơn hàng #{{ order.MaDH }} - Khách hàng{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-file-invoice text-primary"></i> Chi tiết đơn hàng #{{ order.MaDH }}</h2>
+        <a href="{{ url_for('customer.orders') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+    </div>
+    
+    <div class="row">
+        <!-- Thông tin đơn hàng -->
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-info-circle"></i> Thông tin đơn hàng</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p class="mb-2"><strong>Mã đơn hàng:</strong></p>
+                            <p class="text-muted">{{ order.MaDH }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-2"><strong>Ngày đặt:</strong></p>
+                            <p class="text-muted">{{ order.NgayTao.strftime('%d/%m/%Y %H:%M') }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <p class="mb-2"><strong>Trạng thái:</strong></p>
+                        <span class="badge 
+                            {% if order.TrangThai.value == 'pending' %}bg-warning
+                            {% elif order.TrangThai.value == 'processing' %}bg-info
+                            {% elif order.TrangThai.value == 'delivered' %}bg-success
+                            {% else %}bg-secondary{% endif %} fs-6">
+                            {% if order.TrangThai.value == 'pending' %}Chờ xử lý
+                            {% elif order.TrangThai.value == 'processing' %}Đang giao hàng
+                            {% elif order.TrangThai.value == 'delivered' %}Đã giao hàng
+                            {% else %}{{ order.TrangThai.value }}{% endif %}
+                        </span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <p class="mb-2"><strong>Địa chỉ giao hàng:</strong></p>
+                        <p class="text-muted"><i class="fas fa-map-marker-alt text-danger"></i> {{ order.DiaChi }}</p>
+                        <small class="text-muted">Tọa độ: {{ order.Lat }}, {{ order.Lon }}</small>
+                    </div>
+                    
+                    {% if order.GhiChu %}
+                    <div class="mb-3">
+                        <p class="mb-2"><strong>Ghi chú:</strong></p>
+                        <p class="text-muted">{{ order.GhiChu }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Sản phẩm -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-box"></i> Sản phẩm đã đặt</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Sản phẩm</th>
+                                <th>Đơn giá</th>
+                                <th>Số lượng</th>
+                                <th>Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ct in order.chi_tiets %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="{{ url_for('static', filename='images/products/' + (ct.san_pham.HinhAnh or 'default.png')) }}" 
+                                             width="50" height="50" class="me-2" style="object-fit: cover;">
+                                        <div>
+                                            <strong>{{ ct.san_pham.TenSP }}</strong>
+                                            <br>
+                                            <small class="text-muted">{{ ct.MaSP }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{ "{:,.0f}".format(ct.DonGia) }}đ/{{ ct.san_pham.DonVi }}</td>
+                                <td>{{ ct.SoLuong }} {{ ct.san_pham.DonVi }}</td>
+                                <td class="fw-bold">{{ "{:,.0f}".format(ct.ThanhTien) }}đ</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-light">
+                                <td colspan="3" class="text-end"><strong>Tổng cộng:</strong></td>
+                                <td class="fw-bold text-primary fs-5">
+                                    {{ "{:,.0f}".format(order.chi_tiets|sum(attribute='ThanhTien')) }}đ
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Thông tin vận chuyển -->
+        <div class="col-md-4">
+            {% if tai_xe %}
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-truck"></i> Thông tin vận chuyển</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-2"><strong>Tài xế:</strong></p>
+                    <p class="text-muted">{{ tai_xe.TenTX }}</p>
+                    
+                    <p class="mb-2"><strong>Số điện thoại:</strong></p>
+                    <p class="text-muted"><i class="fas fa-phone"></i> {{ tai_xe.SDT }}</p>
+                    
+                    <p class="mb-2"><strong>Biển số xe:</strong></p>
+                    <p class="text-muted"><i class="fas fa-car"></i> {{ tai_xe.BienSoXe }}</p>
+                    
+                    <p class="mb-2"><strong>Thứ tự giao:</strong></p>
+                    <p class="text-muted">Điểm thứ {{ donhang_ctvc.ThuTu }}</p>
+                    
+                    <p class="mb-2"><strong>Trạng thái giao hàng:</strong></p>
+                    <span class="badge 
+                        {% if donhang_ctvc.TrangThai.value == 'pending' %}bg-warning
+                        {% elif donhang_ctvc.TrangThai.value == 'delivering' %}bg-info
+                        {% elif donhang_ctvc.TrangThai.value == 'delivered' %}bg-success
+                        {% else %}bg-danger{% endif %}">
+                        {% if donhang_ctvc.TrangThai.value == 'pending' %}Chờ giao
+                        {% elif donhang_ctvc.TrangThai.value == 'delivering' %}Đang giao
+                        {% elif donhang_ctvc.TrangThai.value == 'delivered' %}Đã giao
+                        {% else %}Thất bại{% endif %}
+                    </span>
+                    
+                    {% if donhang_ctvc.ThoiGianGiaoThucTe %}
+                    <p class="mb-2 mt-3"><strong>Thời gian giao:</strong></p>
+                    <p class="text-muted">{{ donhang_ctvc.ThoiGianGiaoThucTe.strftime('%d/%m/%Y %H:%M') }}</p>
+                    {% endif %}
+                    
+                    <hr>
+                    
+                    <a href="{{ url_for('customer.track_order', ma_dh=order.MaDH) }}" 
+                       class="btn btn-success w-100">
+                        <i class="fas fa-map-marked-alt"></i> Theo dõi vận chuyển
+                    </a>
+                </div>
+            </div>
+            {% else %}
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-clock fa-3x text-muted mb-3"></i>
+                    <h5>Chờ xử lý</h5>
+                    <p class="text-muted">Đơn hàng của bạn đang chờ được phân công tài xế</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

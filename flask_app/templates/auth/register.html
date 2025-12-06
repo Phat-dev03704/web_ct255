@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}Đăng ký tài khoản{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            <div class="card shadow-lg">
+                <div class="card-header bg-success text-white text-center">
+                    <h4 class="mb-0"><i class="fas fa-user-plus"></i> Đăng ký tài khoản</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" id="registerForm">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Tên đăng nhập <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                <input type="text" class="form-control" id="username" name="username" 
+                                       required autofocus minlength="3" maxlength="50"
+                                       pattern="[a-zA-Z0-9_]+"
+                                       title="Chỉ chấp nhận chữ cái, số và dấu gạch dưới">
+                            </div>
+                            <small class="text-muted">Chỉ chữ cái, số và dấu gạch dưới, từ 3-50 ký tự</small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Mật khẩu <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                <input type="password" class="form-control" id="password" name="password" 
+                                       required minlength="6"
+                                       title="Mật khẩu phải có ít nhất 6 ký tự">
+                            </div>
+                            <small class="text-muted">Tối thiểu 6 ký tự</small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="confirm_password" class="form-label">Xác nhận mật khẩu <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                <input type="password" class="form-control" id="confirm_password" name="confirm_password" 
+                                       required minlength="6">
+                            </div>
+                            <div id="passwordError" class="text-danger mt-1" style="display: none;">
+                                <small><i class="fas fa-exclamation-circle"></i> Mật khẩu xác nhận không khớp</small>
+                            </div>
+                        </div>
+                        
+                        <hr class="my-4">
+                        
+                        <h6 class="mb-3"><i class="fas fa-info-circle"></i> Thông tin cá nhân</h6>
+                        
+                        <div class="mb-3">
+                            <label for="ten_nd" class="form-label">Họ và tên <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                                <input type="text" class="form-control" id="ten_nd" name="ten_nd" 
+                                       required maxlength="100"
+                                       placeholder="Ví dụ: Nguyễn Văn An">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="sdt" class="form-label">Số điện thoại <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                <input type="tel" class="form-control" id="sdt" name="sdt" 
+                                       required pattern="[0-9]{10,11}"
+                                       placeholder="0901234567"
+                                       title="Số điện thoại phải có 10-11 chữ số">
+                            </div>
+                            <small class="text-muted">10-11 chữ số</small>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success w-100 mb-3">
+                            <i class="fas fa-user-plus"></i> Đăng ký
+                        </button>
+                        
+                        <div class="text-center">
+                            <p class="mb-0">Đã có tài khoản? <a href="{{ url_for('auth.login') }}">Đăng nhập ngay</a></p>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-muted text-center">
+                    <small><i class="fas fa-shield-alt"></i> Thông tin của bạn được bảo mật an toàn</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Kiểm tra mật khẩu khớp
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirm_password').value;
+    const errorDiv = document.getElementById('passwordError');
+    
+    if (password !== confirmPassword) {
+        e.preventDefault();
+        errorDiv.style.display = 'block';
+        document.getElementById('confirm_password').classList.add('is-invalid');
+        return false;
+    } else {
+        errorDiv.style.display = 'none';
+        document.getElementById('confirm_password').classList.remove('is-invalid');
+    }
+});
+
+// Xóa lỗi khi người dùng gõ lại
+document.getElementById('confirm_password').addEventListener('input', function() {
+    const password = document.getElementById('password').value;
+    const confirmPassword = this.value;
+    const errorDiv = document.getElementById('passwordError');
+    
+    if (confirmPassword && password !== confirmPassword) {
+        errorDiv.style.display = 'block';
+        this.classList.add('is-invalid');
+    } else {
+        errorDiv.style.display = 'none';
+        this.classList.remove('is-invalid');
+    }
+});
+
+// Format số điện thoại (chỉ cho phép số)
+document.getElementById('sdt').addEventListener('input', function(e) {
+    this.value = this.value.replace(/[^0-9]/g, '');
+});
+</script>
+{% endblock %}

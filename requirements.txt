@@ -1,0 +1,22 @@
+# Python dependencies for VRP solver project
+# Install: pip install -r requirements.txt
+
+# Core solver
+ortools>=9.8.0
+
+# Data processing
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Visualization
+folium>=0.15.0
+matplotlib>=3.7.0
+
+# Routing API
+requests>=2.31.0
+
+# Optional: for other solvers (uncomment if needed)
+# pulp>=2.7.0              # for MILP
+# gurobipy>=10.0.0         # for Gurobi (requires license)
+# scipy>=1.11.0            # for some optimization algorithms
+# networkx>=3.1            # for graph algorithms

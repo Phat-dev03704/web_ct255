@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}Delivery Routes - Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid my-4">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2><i class="fas fa-route text-primary"></i> Delivery Routes Management</h2>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div id="map" style="height: 400px; width: 100%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for route in routes %}
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-truck"></i> Route {{ route.MaVC }}
+                        <span class="badge bg-light text-dark float-end">{{ route.TrangThai }}</span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        {% if route.NgayBatDau or route.NgayKetThuc %}
+                        <div class="col-6">
+                            <small class="text-muted">Ngày bắt đầu:</small><br>
+                            <strong>{{ route.NgayBatDau.strftime('%d/%m/%Y %H:%M') if route.NgayBatDau else 'Chưa xác định' }}</strong>
+                        </div>
+                        {% endif %}
+                        <div class="{% if route.NgayBatDau or route.NgayKetThuc %}col-6{% else %}col-12{% endif %}">
+                            <small class="text-muted">Số tài xế:</small><br>
+                            <strong>{{ route.ct_van_chuyens|length }} tài xế</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <small class="text-muted">Tổng quãng đường:</small><br>
+                            <strong>{{ "{:.2f}".format(route.TongQuangDuong) if route.TongQuangDuong else '0.00' }} km</strong>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted">Số tuyến:</small><br>
+                            <strong>{{ route.ct_van_chuyens|length }} tuyến</strong>
+                        </div>
+                    </div>
+                    
+                    {% if route.ct_van_chuyens %}
+                    <div class="mb-3">
+                        <small class="text-muted d-block mb-2">Tài xế phân công:</small>
+                        <ul class="small mb-0 ps-3">
+                            {% for ctvc in route.ct_van_chuyens %}
+                            <li>
+                                <strong>{{ ctvc.tai_xe.TenTX }}</strong> 
+                                <span class="text-muted">({{ ctvc.tai_xe.BienSoXe }})</span>
+                                - {{ ctvc.donhang_ctvcs|length }} đơn hàng
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                    
+                    <hr>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('admin.route_detail', ma_vc=route.MaVC) }}" class="btn btn-sm btn-info">
+                            <i class="fas fa-eye"></i> Xem chi tiết
+                        </a>
+                        <a href="{{ url_for('admin.route_map', ma_vc=route.MaVC) }}" class="btn btn-sm btn-primary" target="_blank">
+                            <i class="fas fa-map-marked-alt"></i> Xem bản đồ
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize map
+    var map = L.map('map').setView([10.030874, 105.768299], 13);
+    
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+    
+    // Add depot marker
+    L.marker([10.030874, 105.768299], {
+        icon: L.divIcon({
+            className: 'custom-div-icon',
+            html: "<div style='background-color:#c30b82;' class='marker-pin'></div>",
+            iconSize: [30, 42],
+            iconAnchor: [15, 42]
+        })
+    }).addTo(map).bindPopup('<strong>Depot - DHCT</strong>');
+});
+</script>
+
+<style>
+.marker-pin {
+    width: 30px;
+    height: 30px;
+    border-radius: 50% 50% 50% 0;
+    background: #c30b82;
+    position: absolute;
+    transform: rotate(-45deg);
+    left: 50%;
+    top: 50%;
+    margin: -15px 0 0 -15px;
+}
+</style>
+{% endblock %}

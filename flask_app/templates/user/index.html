@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Trang chủ - VRP Fruit Store{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h1 class="text-center mb-3">
+                <i class="fas fa-apple-alt text-success"></i> Trái Cây Tươi Ngon
+            </h1>
+            <p class="text-center text-muted">Chọn sản phẩm yêu thích và đặt hàng ngay!</p>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-4 col-lg-3 mb-4">
+            <div class="card h-100 shadow-sm hover-shadow">
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <img src="/static/images/products/{% if product.HinhAnh %}{{ product.HinhAnh }}{% else %}placeholder.svg{% endif %}" 
+                         alt="{{ product.TenSP }}" 
+                         class="img-fluid" 
+                         style="max-height: 180px;"
+                         onerror="this.src='/static/images/products/placeholder.svg'">
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.TenSP }}</h5>
+                    <p class="card-text text-muted small">
+                        {{ product.MoTa[:50] }}{% if product.MoTa|length > 50 %}...{% endif %}
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="h5 text-success mb-0">{{ "{:,.0f}".format(product.DonGia) }}đ/{{ product.DonVi }}</span>
+                        <span class="badge bg-secondary">Còn {{ product.TonKho }} {{ product.DonVi }}</span>
+                    </div>
+                </div>
+                <div class="card-footer bg-white border-top-0">
+                    <div class="text-center">
+                        <p class="text-muted small mb-2">Vui lòng đăng nhập để đặt hàng</p>
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-primary w-100">
+                            <i class="fas fa-sign-in-alt"></i> Đăng nhập
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if not products %}
+    <div class="text-center py-5">
+        <i class="fas fa-box-open fa-5x text-muted mb-3"></i>
+        <h3>Chưa có sản phẩm nào</h3>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.hover-shadow {
+    transition: all 0.3s;
+}
+.hover-shadow:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+</style>
+{% endblock %}

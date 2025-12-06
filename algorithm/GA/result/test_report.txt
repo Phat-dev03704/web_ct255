@@ -1,0 +1,135 @@
+================================================================================
+BÁO CÁO TEST GENETIC ALGORITHM - TẤT CẢ DATASETS
+================================================================================
+
+Thời gian test: 2025-10-21 20:59:02
+Tổng số datasets: 56
+Thành công: 55
+Thất bại: 1
+Tổng thời gian: 116.76 phút
+
+================================================================================
+PHƯƠNG PHÁP: GENETIC ALGORITHM
+================================================================================
+Đặc điểm:
+  - Metaheuristic mô phỏng quá trình tiến hóa tự nhiên
+  - Selection: Tournament selection
+  - Crossover: Order Crossover (OX) - lai ghép 2 parents
+  - Mutation: Swap + Reverse (2-opt style)
+  - Elitism: Giữ lại best individuals qua các thế hệ
+  - Tự động điều chỉnh hyperparameters theo kích thước bài toán
+
+Hyperparameters:
+  - Population size: 50-150 (tùy kích thước)
+  - Max generations: 100-200 (tùy kích thước)
+  - Crossover rate: 0.8 (80% cặp lai ghép)
+  - Mutation rate: 0.2 (20% cá thể đột biến)
+  - Elite size: 5-15 (giữ lại best individuals)
+  - Tournament size: 3 (selection pressure)
+
+================================================================================
+THỐNG KÊ THEO CATEGORY
+================================================================================
+
+C1:
+  Số datasets: 8
+  Trung bình số xe: 25.00
+  Trung bình quãng đường: 1646.32
+  Trung bình thời gian: 128.44s
+  Trung bình generations: 0
+
+C2:
+  Số datasets: 8
+  Trung bình số xe: 12.88
+  Trung bình quãng đường: 1477.12
+  Trung bình thời gian: 158.66s
+  Trung bình generations: 0
+
+R1:
+  Số datasets: 12
+  Trung bình số xe: 23.50
+  Trung bình quãng đường: 1571.44
+  Trung bình thời gian: 122.42s
+  Trung bình generations: 0
+
+R2:
+  Số datasets: 11
+  Trung bình số xe: 11.27
+  Trung bình quãng đường: 1542.07
+  Trung bình thời gian: 117.81s
+  Trung bình generations: 0
+
+RC1:
+  Số datasets: 8
+  Trung bình số xe: 22.12
+  Trung bình quãng đường: 1970.52
+  Trung bình thời gian: 87.89s
+  Trung bình generations: 0
+
+RC2:
+  Số datasets: 8
+  Trung bình số xe: 12.38
+  Trung bình quãng đường: 1864.28
+  Trung bình thời gian: 104.28s
+  Trung bình generations: 0
+
+================================================================================
+CHI TIẾT TẤT CẢ KẾT QUẢ
+================================================================================
+
+Dataset Category  Customers  Vehicles  Total Distance  Avg Distance/Vehicle  Customers Served  Solve Time (s)  Generations  Improvements Final Fitness  Status
+   C101       C1        100        25         1545.58                 61.82                74           97.31            0             0      0.000647 Success
+   C102       C1        100        25         1607.45                 64.30                77          109.55            0             0      0.000622 Success
+   C103       C1        100        25         1620.16                 64.81                88          137.45            0             0      0.000617 Success
+   C105       C1        100        25         1640.82                 65.63                87          124.15            0             0      0.000609 Success
+   C106       C1        100        25         1587.87                 63.51                89          126.92            0             0      0.000629 Success
+   C107       C1        100        25         1734.13                 69.37                80          115.78            0             0      0.000576 Success
+   C108       C1        100        25         1734.22                 69.37                96          125.94            0             0      0.000576 Success
+   C109       C1        100        25         1700.34                 68.01                93          190.42            0             0      0.000588 Success
+   C201       C2        100        17         1738.25                102.25               100          151.59            0             0      0.000575 Success
+   C202       C2        100        17         1673.52                 98.44               100          153.41            0             0      0.000597 Success
+   C203       C2        100        13         1528.90                117.61               100          171.77            0             0      0.000654 Success
+   C204       C2        100        11         1289.12                117.19               100          164.16            0             0      0.000775 Success
+   C205       C2        100        12         1451.05                120.92               100          139.90            0             0      0.000689 Success
+   C206       C2        100        11         1395.44                126.86               100          162.86            0             0      0.000716 Success
+   C207       C2        100        12         1360.33                113.36               100          161.79            0             0      0.000735 Success
+   C208       C2        100        10         1380.32                138.03               100          163.82            0             0      0.000724 Success
+   R101       R1        100        25         1469.34                 58.77                59           77.90            0             0      0.000680 Success
+   R102       R1        100        25         1514.55                 60.58                71          101.64            0             0      0.000660 Success
+   R103       R1        100        25         1505.45                 60.22                75          109.38            0             0      0.000664 Success
+   R104       R1        100        25         1639.71                 65.59                86          150.79            0             0      0.000609 Success
+   R105       R1        100        25         1580.00                 63.20                63           97.76            0             0      0.000633 Success
+   R106       R1        100        25         1590.51                 63.62                75          120.95            0             0      0.000628 Success
+   R107       R1        100        25         1635.00                 65.40                82          136.53            0             0      0.000611 Success
+   R108       R1        100        18         1538.47                 85.47               100          156.28            0             0      0.000650 Success
+   R109       R1        100        25         1664.24                 66.57                82          109.65            0             0      0.000601 Success
+   R110       R1        100        25         1688.31                 67.53                92          121.21            0             0      0.000592 Success
+   R111       R1        100        25         1652.13                 66.09                78          125.32            0             0      0.000605 Success
+   R112       R1        100        14         1379.62                 98.54               100          161.62            0             0      0.000724 Success
+   R201       R2        100        15         2064.52                137.63               100          105.02            0             0      0.000484 Success
+   R202       R2        100        25         1954.71                 78.19                91          107.04            0             0      0.000511 Success
+   R203       R2        100        12         1673.90                139.49               100          117.04            0             0      0.000597 Success
+   R204       R2        100         8         1303.48                162.94               100          116.90            0             0      0.000767 Success
+   R205       R2        100         9         1543.32                171.48               100          134.75            0             0      0.000648 Success
+   R206       R2        100         9         1489.72                165.52               100          119.48            0             0      0.000671 Success
+   R207       R2        100         9         1424.53                158.28               100          119.00            0             0      0.000701 Success
+   R208       R2        100         9         1245.72                138.41               100          112.50            0             0      0.000802 Success
+   R209       R2        100        10         1471.01                147.10               100          129.42            0             0      0.000679 Success
+   R210       R2        100        10         1604.93                160.49               100          117.11            0             0      0.000623 Success
+   R211       R2        100         8         1186.92                148.36               100          117.60            0             0      0.000842 Success
+  RC101      RC1        100        25         2047.07                 81.88                65           63.47            0             0      0.000488 Success
+  RC102      RC1        100        25         2181.79                 87.27                79           78.72            0             0      0.000458 Success
+  RC103      RC1        100        25         2072.50                 82.90                89           90.50            0             0      0.000482 Success
+  RC104      RC1        100        17         1698.86                 99.93               100          109.46            0             0      0.000588 Success
+  RC105      RC1        100        25         2148.53                 85.94                79           76.27            0             0      0.000465 Success
+  RC106      RC1        100        25         1972.36                 78.89                86           82.59            0             0      0.000507 Success
+  RC107      RC1        100        20         2021.79                101.09               100           96.98            0             0      0.000494 Success
+  RC108      RC1        100        15         1621.29                108.09               100          105.16            0             0      0.000616 Success
+  RC201      RC2        100        16         2278.23                142.39               100           98.84            0             0      0.000439 Success
+  RC202      RC2        100        12         2188.16                182.35               100          110.52            0             0      0.000457 Success
+  RC203      RC2        100        15         1846.92                123.13               100          110.01            0             0      0.000541 Success
+  RC204      RC2        100        10         1385.55                138.55               100          109.28            0             0      0.000721 Success
+  RC205      RC2        100        16         2315.21                144.70               100          103.14            0             0      0.000432 Success
+  RC206      RC2        100        10         1850.12                185.01               100          108.28            0             0      0.000540 Success
+  RC207      RC2        100        10         1772.76                177.28               100          102.23            0             0      0.000564 Success
+  RC208      RC2        100        10         1277.29                127.73               100           91.95            0             0      0.000782 Success

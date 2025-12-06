@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}Chi tiết vận chuyển {{ van_chuyen.MaVC }} - Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid my-4">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <a href="{{ url_for('admin.routes') }}" class="btn btn-secondary mb-3">
+                <i class="fas fa-arrow-left"></i> Quay lại
+            </a>
+            <h2><i class="fas fa-route text-primary"></i> Chi tiết vận chuyển {{ van_chuyen.MaVC }}</h2>
+        </div>
+    </div>
+
+    <!-- Route Summary -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Thông tin chung</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <small class="text-muted">Mã vận chuyển:</small><br>
+                            <strong>{{ van_chuyen.MaVC }}</strong>
+                        </div>
+                        {% if van_chuyen.NgayBatDau or van_chuyen.NgayKetThuc %}
+                        <div class="col-md-4">
+                            <small class="text-muted">Ngày bắt đầu:</small><br>
+                            <strong>{{ van_chuyen.NgayBatDau.strftime('%d/%m/%Y %H:%M') if van_chuyen.NgayBatDau else 'Chưa xác định' }}</strong>
+                        </div>
+                        {% endif %}
+                        <div class="col-md-4">
+                            <small class="text-muted">Tổng quãng đường:</small><br>
+                            <strong>{{ "{:.2f}".format(van_chuyen.TongQuangDuong) if van_chuyen.TongQuangDuong else '0.00' }} km</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <small class="text-muted">Trạng thái:</small><br>
+                            <span class="badge bg-info">{{ van_chuyen.TrangThai }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Driver Routes -->
+    {% for ctvc in van_chuyen.ct_van_chuyens %}
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-user-tie"></i> 
+                        Tài xế: {{ ctvc.tai_xe.TenTX }}
+                        <span class="badge bg-light text-dark float-end">{{ ctvc.tai_xe.BienSoXe }}</span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <!-- Driver Info -->
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <small class="text-muted">Số điện thoại:</small><br>
+                            <strong>{{ ctvc.tai_xe.SDT }}</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <small class="text-muted">Sức chứa xe:</small><br>
+                            <strong>{{ ctvc.tai_xe.SucChua }} kg</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <small class="text-muted">Quãng đường:</small><br>
+                            <strong>{{ "{:.2f}".format(ctvc.QuangDuong / 1000) if ctvc.QuangDuong else '0' }} km</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <small class="text-muted">Số đơn hàng:</small><br>
+                            <strong>{{ ctvc.donhang_ctvcs|length }} đơn</strong>
+                        </div>
+                    </div>
+
+                    <!-- Orders Table -->
+                    <h6 class="text-muted mb-3"><i class="fas fa-box"></i> Danh sách đơn hàng</h6>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Thứ tự</th>
+                                    <th>Mã đơn hàng</th>
+                                    <th>Khách hàng</th>
+                                    <th>Địa chỉ</th>
+                                    <th>Trọng lượng</th>
+                                    <th>Giá trị</th>
+                                    <th>Trạng thái giao</th>
+                                    <th>Trạng thái ĐH</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for dh_ctvc in ctvc.donhang_ctvcs|sort(attribute='ThuTu') %}
+                                <tr>
+                                    <td>{{ dh_ctvc.ThuTu }}</td>
+                                    <td><strong>{{ dh_ctvc.don_hang.MaDH }}</strong></td>
+                                    <td>{{ dh_ctvc.don_hang.nguoi_dung.TenND }}</td>
+                                    <td>
+                                        <small>{{ dh_ctvc.don_hang.DiaChi }}</small><br>
+                                        <small class="text-muted">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            {{ "{:.6f}".format(dh_ctvc.don_hang.Lat) if dh_ctvc.don_hang.Lat else '0' }}, 
+                                            {{ "{:.6f}".format(dh_ctvc.don_hang.Lon) if dh_ctvc.don_hang.Lon else '0' }}
+                                        </small>
+                                    </td>
+                                    <td>
+                                        {% set total_weight = dh_ctvc.don_hang.chi_tiets|sum(attribute='SoLuong')|default(0) %}
+                                        {{ total_weight }} kg
+                                    </td>
+                                    <td>{{ "{:,.0f}".format(dh_ctvc.don_hang.TongTien) }} đ</td>
+                                    <td>
+                                        {% if dh_ctvc.TrangThai.value == 'pending' %}
+                                            <span class="badge bg-warning text-dark">Chờ giao</span>
+                                        {% elif dh_ctvc.TrangThai.value == 'in_transit' %}
+                                            <span class="badge bg-info">Đang giao</span>
+                                        {% elif dh_ctvc.TrangThai.value == 'completed' %}
+                                            <span class="badge bg-success">Đã giao</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ dh_ctvc.TrangThai.value }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if dh_ctvc.don_hang.TrangThai == 'pending' %}
+                                            <span class="badge bg-warning text-dark">Chờ xử lý</span>
+                                        {% elif dh_ctvc.don_hang.TrangThai == 'confirmed' %}
+                                            <span class="badge bg-primary">Đã xác nhận</span>
+                                        {% elif dh_ctvc.don_hang.TrangThai == 'shipping' %}
+                                            <span class="badge bg-info">Đang giao</span>
+                                        {% elif dh_ctvc.don_hang.TrangThai == 'delivered' %}
+                                            <span class="badge bg-success">Đã giao</span>
+                                        {% elif dh_ctvc.don_hang.TrangThai == 'cancelled' %}
+                                            <span class="badge bg-danger">Đã hủy</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ dh_ctvc.don_hang.TrangThai }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    {% if not van_chuyen.ct_van_chuyens %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> Chưa có tài xế được phân công cho vận chuyển này.
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

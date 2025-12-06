@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Map Editor - Tạo điểm khách hàng</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css" />
+  <style>
+    body, html { height: 100%; margin: 0; font-family: Arial, Helvetica, sans-serif }
+    /* layout: container is flex so sidebar and map are siblings and won't overlap */
+    #container { display: flex; height: 100vh; }
+    #map { flex: 1 1 auto; min-width: 0; }
+    #sidebar { width: 350px; flex: 0 0 350px; overflow:auto; padding:12px; box-shadow: -2px 0 6px rgba(0,0,0,0.08); background:#fff }
+    input, button, select { width:100%; box-sizing: border-box; padding:8px; margin:6px 0 }
+    table { width:100%; border-collapse:collapse }
+    table td, table th { border-bottom:1px solid #eee; padding:6px; font-size:13px }
+    .depot { font-weight:bold; color: #000 }
+    @media(max-width:700px){
+      /* stack on small screens */
+      #container{ flex-direction: column; }
+      #sidebar{ width:100%; flex:0 0 auto }
+      #map{ height: 60vh }
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="map"></div>
+    <div id="sidebar">
+    <h3>Tạo điểm khách hàng</h3>
+    <p>Click lên bản đồ để thêm điểm. Chọn 1 điểm làm depot (nhà kho) nếu cần.</p>
+
+  <label for="id">ID</label>
+    <input id="id" placeholder="Ví dụ: 1, 2, 3..." />
+  <div id="lastCoords" style="font-size:13px;color:#333;margin-top:6px;margin-bottom:6px">Click lên bản đồ để chọn tọa độ</div>
+    <label for="name">Tên</label>
+    <input id="name" placeholder="Ví dụ: KH_1, KH_2..." />
+    <label for="demand">Demand</label>
+    <input id="demand" placeholder="1" value="1" />
+    <label for="ready">Ready time</label>
+    <input id="ready" placeholder="0" value="0" />
+    <label for="due">Due date</label>
+    <input id="due" placeholder="1000" value="1000" />
+    <label for="service">Service time</label>
+    <input id="service" placeholder="0" value="0" />
+
+    <div style="display:flex; gap:8px">
+      <button id="addPoint">Thêm từ form (dùng tọa độ con trỏ)</button>
+      <button id="setDepot">Đặt điểm được chọn làm Depot</button>
+    </div>
+
+    <hr />
+    <div>
+      <strong>Danh sách điểm</strong>
+      <table id="pointsTable"><thead><tr><th>ID</th><th>Tọa độ</th><th></th></tr></thead><tbody></tbody></table>
+    </div>
+
+    <hr />
+    <label>Import CSV (id,name,lat,lon,...)</label>
+    <input type="file" id="fileInput" accept="text/csv" />
+
+    <button id="exportCsv">Xuất CSV (tải về)</button>
+    <p style="font-size:12px; color:#555">Sau khi xuất, bạn có thể dùng file trong `data/input/` hoặc upload lại qua script.</p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+  <script>
+  const map = L.map('map').setView([10.03456, 105.78700], 14);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+  // ensure Leaflet recalculates size when layout settles or window resizes
+  setTimeout(()=>{ try{ map.invalidateSize(); }catch(e){} }, 250);
+  window.addEventListener('resize', ()=>{ try{ map.invalidateSize(); }catch(e){} });
+
+    const markers = [];
+    const tableBody = document.querySelector('#pointsTable tbody');
+    let selectedMarker = null;
+
+    function addMarker(lat, lon, meta){
+      const m = L.marker([lat, lon], {riseOnHover:true}).addTo(map);
+      m.meta = meta || {};
+      m.bindTooltip(`${meta.id || ''} — ${meta.name || ''}`, {permanent:false});
+      m.on('click', ()=>{
+        selectedMarker = m;
+        document.getElementById('id').value = m.meta.id || '';
+        document.getElementById('name').value = m.meta.name || '';
+        document.getElementById('demand').value = m.meta.demand || 1;
+        document.getElementById('ready').value = m.meta.ready_time || 0;
+        document.getElementById('due').value = m.meta.due_date || 1000;
+        document.getElementById('service').value = m.meta.service_time || 0;
+      });
+      markers.push(m);
+      redrawTable();
+    }
+
+    function redrawTable(){
+      tableBody.innerHTML = '';
+      markers.forEach((m, idx)=>{
+        const tr = document.createElement('tr');
+        const idTd = document.createElement('td'); idTd.textContent = m.meta.id || `p${idx+1}`;
+        const locTd = document.createElement('td'); locTd.textContent = `${m.getLatLng().lat.toFixed(6)}, ${m.getLatLng().lng.toFixed(6)}`;
+        const actTd = document.createElement('td');
+        const delBtn = document.createElement('button'); delBtn.textContent = 'X'; delBtn.onclick = ()=>{ map.removeLayer(m); markers.splice(idx,1); redrawTable(); };
+        actTd.appendChild(delBtn);
+        tr.appendChild(idTd); tr.appendChild(locTd); tr.appendChild(actTd);
+        tableBody.appendChild(tr);
+      });
+    }
+
+    map.on('click', function(e){
+      // place a temporary marker coordinate and fill form fields
+      const lat = e.latlng.lat, lon = e.latlng.lng;
+      // auto-generate ID and name based on current marker count
+      const nextNum = markers.length + 1;
+      document.getElementById('id').value = nextNum.toString();
+      document.getElementById('name').value = `KH_${nextNum}`;
+      // store pointer coords in form fields (not visible)
+      document.getElementById('id').dataset.lat = lat;
+      document.getElementById('id').dataset.lon = lon;
+      // show coordinates in sidebar (avoid blocking alert dialogs)
+      const last = document.getElementById('lastCoords');
+      if(last) last.textContent = `Con trỏ tại: ${lat.toFixed(6)}, ${lon.toFixed(6)} — Nhấn 'Thêm từ form' để lưu`;
+    });
+
+    document.getElementById('addPoint').addEventListener('click', ()=>{
+      const lat = parseFloat(document.getElementById('id').dataset.lat || 0);
+      const lon = parseFloat(document.getElementById('id').dataset.lon || 0);
+      const id = document.getElementById('id').value || `${markers.length+1}`;
+      const name = document.getElementById('name').value || `KH_${markers.length+1}`;
+      const demand = document.getElementById('demand').value || 1;
+      const ready = document.getElementById('ready').value || 0;
+      const due = document.getElementById('due').value || 1000;
+      const service = document.getElementById('service').value || 0;
+  if(!lat || !lon){ alert('Vui lòng click lên bản đồ trước để chọn vị trí'); return }
+  addMarker(lat, lon, {id,name,demand,ready_time:ready,due_date:due,service_time:service});
+  // ensure map layout refreshed so sidebar doesn't cover parts
+  setTimeout(()=>{ try{ map.invalidateSize(); }catch(e){} }, 200);
+    });
+
+    document.getElementById('setDepot').addEventListener('click', ()=>{
+      if(!selectedMarker){ alert('Chọn một điểm bằng click trước'); return }
+      // mark selected as depot by updating its meta and tooltip/popup
+      selectedMarker.meta.id = selectedMarker.meta.id || 'DEPOT';
+      selectedMarker.meta.name = selectedMarker.meta.name || 'Depot';
+      selectedMarker.bindTooltip(`${selectedMarker.meta.id} — ${selectedMarker.meta.name}`);
+      selectedMarker.openPopup = null;
+      redrawTable();
+      alert('Đã đánh dấu là depot (lưu sẽ xuất file có depot ở vị trí này)');
+    });
+
+    document.getElementById('exportCsv').addEventListener('click', ()=>{
+      if(markers.length===0){ alert('Không có điểm để xuất'); return }
+      const header = ['id','name','lat','lon','demand','ready_time','due_date','service_time'];
+      const rows = markers.map(m=>({
+        id: m.meta.id || '', name: m.meta.name || '', lat: m.getLatLng().lat, lon: m.getLatLng().lng,
+        demand: m.meta.demand || 1, ready_time: m.meta.ready_time || 0, due_date: m.meta.due_date || 1000, service_time: m.meta.service_time || 0
+      }));
+      const csv = [header.join(',')].concat(rows.map(r=>header.map(h=>String(r[h]).replace(/\n/g,' ')).join(','))).join('\n');
+      const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'khach_hang_tu_tao.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    });
+
+    // CSV import
+    document.getElementById('fileInput').addEventListener('change', function(){
+      const f = this.files[0]; if(!f) return; const reader = new FileReader();
+      reader.onload = function(ev){
+        const txt = ev.target.result; const lines = txt.split(/\r?\n/); const hdr = lines[0].split(',').map(s=>s.trim());
+        for(let i=1;i<lines.length;i++){ if(!lines[i].trim()) continue; const cols = lines[i].split(','); const obj = {};
+          for(let j=0;j<hdr.length;j++){ obj[hdr[j]] = cols[j] }
+          const lat = parseFloat(obj.lat || obj['YCOORD.'] || 0); const lon = parseFloat(obj.lon || obj['XCOORD.'] || 0);
+          if(!isNaN(lat) && !isNaN(lon)) addMarker(lat, lon, {id: obj.id||obj.NAME||'', name: obj.name||obj.NAME||'', demand: obj.demand||1, ready_time: obj.ready_time||0, due_date: obj.due_date||1000, service_time: obj.service_time||0});
+        }
+      };
+      reader.readAsText(f, 'utf-8');
+    });
+
+  </script>
+</body>
+</html>

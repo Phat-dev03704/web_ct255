@@ -1,0 +1,436 @@
+{% extends "base.html" %}
+
+{% block title %}Chi tiết tuyến - Tài xế{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-map-marked-alt"></i> {{ ctvc.van_chuyen.TenTuyen }}</h2>
+        <div>
+            <a href="{{ url_for('driver.route_map', ctvc_id=ctvc.id) }}" class="btn btn-info" target="_blank">
+                <i class="fas fa-map"></i> Xem bản đồ
+            </a>
+            <a href="{{ url_for('driver.dashboard') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Quay lại
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Map -->
+        <div class="col-lg-7">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-map"></i> Bản đồ tuyến đường</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div id="map" style="height: 500px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders List -->
+        <div class="col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-list-ol"></i> Danh sách điểm giao hàng</h5>
+                </div>
+                <div class="card-body" style="max-height: 500px; overflow-y: auto;">
+                    {% for dhctvc in donhang_ctvcs %}
+                    <div class="card mb-3 {% if dhctvc.TrangThai.value == 'delivered' %}border-success{% endif %}">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="mb-1">
+                                        <span class="badge bg-primary">{{ dhctvc.ThuTu }}</span>
+                                        {{ dhctvc.don_hang.MaDH }}
+                                    </h6>
+                                    <p class="mb-1"><strong>{{ dhctvc.don_hang.nguoi_dung.TenND }}</strong></p>
+                                    <p class="small text-muted mb-1">
+                                        <i class="fas fa-map-marker-alt"></i> 
+                                        {{ dhctvc.don_hang.DiaChi[:40] }}...
+                                    </p>
+                                    <p class="small mb-1">
+                                        <i class="fas fa-phone"></i> {{ dhctvc.don_hang.nguoi_dung.SDT }}
+                                    </p>
+                                </div>
+                                <div>
+                                    {% if dhctvc.TrangThai.value == 'delivered' %}
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-check"></i> Đã giao
+                                        </span>
+                                    {% elif dhctvc.TrangThai.value == 'delivering' %}
+                                        <span class="badge bg-primary">
+                                            <i class="fas fa-shipping-fast"></i> Đang giao
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-warning">
+                                            <i class="fas fa-clock"></i> Chờ giao
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            {% if dhctvc.TrangThai.value != 'delivered' %}
+                            <div class="mt-2">
+                                <button class="btn btn-sm btn-success w-100 btn-complete-order" 
+                                        data-order-id="{{ dhctvc.don_hang.MaDH }}"
+                                        data-ctvc-id="{{ ctvc.id }}"
+                                        data-order-sequence="{{ dhctvc.ThuTu }}">
+                                    <i class="fas fa-check-circle"></i> Xác nhận đã giao
+                                </button>
+                            </div>
+                            {% else %}
+                            <div class="mt-2">
+                                <small class="text-success">
+                                    <i class="fas fa-calendar-check"></i> 
+                                    Giao lúc: {{ dhctvc.ThoiGianGiaoThucTe.strftime('%d/%m/%Y %H:%M') if dhctvc.ThoiGianGiaoThucTe else 'N/A' }}
+                                </small>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Handle complete order button clicks
+document.addEventListener('DOMContentLoaded', function() {
+    const completeButtons = document.querySelectorAll('.btn-complete-order');
+    
+    completeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const orderId = this.getAttribute('data-order-id');
+            const ctvcId = this.getAttribute('data-ctvc-id');
+            const sequence = this.getAttribute('data-order-sequence');
+            
+            if (confirm(`Xác nhận đã giao đơn hàng ${orderId}?`)) {
+                completeOrder(orderId, ctvcId, this);
+            }
+        });
+    });
+    
+    function completeOrder(orderId, ctvcId, button) {
+        console.log('Completing order:', orderId, 'for CTVC:', ctvcId);
+        
+        // Disable button
+        button.disabled = true;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
+        
+        fetch(`/driver/order/${orderId}/complete`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ctvc_id: parseInt(ctvcId)})
+        })
+        .then(response => {
+            console.log('Response status:', response.status);
+            return response.json();
+        })
+        .then(data => {
+            console.log('Response data:', data);
+            if (data.success) {
+                // Cập nhật trạng thái và vị trí shipper
+                console.log('Looking for order:', orderId);
+                console.log('orderData IDs:', orderData.map(o => o.id));
+                const order = orderData.find(o => o.id === orderId);
+                console.log('Found order:', order);
+                if (order) {
+                    order.status = 'delivered';
+                    currentLocation = [order.lat, order.lon];
+                    console.log('Updated order status and location');
+                }
+                
+                // Thông báo ngắn trước khi reload
+                const notification = document.createElement('div');
+                notification.className = 'alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3';
+                notification.style.zIndex = '9999';
+                notification.innerHTML = `
+                    <strong>✓ Đã giao thành công!</strong> Đơn ${orderId}
+                `;
+                document.body.appendChild(notification);
+                
+                // Reload trang sau 1 giây
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            } else {
+                alert('Lỗi: ' + (data.message || 'Không thể cập nhật trạng thái'));
+                button.disabled = false;
+                button.innerHTML = '<i class="fas fa-check-circle"></i> Xác nhận đã giao';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Có lỗi xảy ra khi cập nhật trạng thái');
+            button.disabled = false;
+            button.innerHTML = '<i class="fas fa-check-circle"></i> Xác nhận đã giao';
+        });
+    }
+});
+
+// Khởi tạo bản đồ
+var map = L.map('map').setView([10.030874, 105.768299], 13);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+}).addTo(map);
+
+// Depot marker
+var depotIcon = L.icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
+
+var depotMarker = L.marker([10.030874, 105.768299], {icon: depotIcon})
+    .addTo(map)
+    .bindPopup('<b>Depot</b><br>Kho trung tâm - DHCT');
+
+// Global variables
+var allMarkers = [];
+var routeLayer = null;
+var orderData = []; // Lưu thông tin đơn hàng
+var shipperMarker = null; // Icon shipper
+var currentLocation = null; // Chỉ hiển thị sau khi giao đơn đầu tiên
+
+// Thêm thông tin đơn hàng
+{% for dhctvc in donhang_ctvcs %}
+orderData.push({
+    id: '{{ dhctvc.don_hang.MaDH }}',
+    lat: {{ dhctvc.don_hang.Lat }},
+    lon: {{ dhctvc.don_hang.Lon }},
+    sequence: {{ dhctvc.ThuTu }},
+    status: '{{ dhctvc.TrangThai.value }}',
+    customer: '{{ dhctvc.don_hang.nguoi_dung.TenND }}',
+    address: '{{ dhctvc.don_hang.DiaChi[:30] }}...'
+});
+{% endfor %}
+
+// Tạo shipper marker (chỉ khi có vị trí giao hàng)
+function createShipperMarker() {
+    if (!currentLocation) return; // Không hiển thị nếu chưa giao đơn nào
+    
+    if (!shipperMarker) {
+        const shipperIcon = L.divIcon({
+            className: 'shipper-icon',
+            html: '<div style="font-size:30px;">🚚</div>',
+            iconSize: [30, 30],
+            iconAnchor: [15, 15]
+        });
+        
+        shipperMarker = L.marker(currentLocation, {
+            icon: shipperIcon,
+            zIndexOffset: 1000
+        }).addTo(map);
+        
+        shipperMarker.bindPopup('<b>🚚 Vị trí giao hàng gần nhất</b>');
+    } else {
+        shipperMarker.setLatLng(currentLocation);
+    }
+}
+
+// Hàm vẽ bản đồ
+function drawMap() {
+    // Xóa markers và route cũ
+    allMarkers.forEach(m => map.removeLayer(m));
+    allMarkers = [];
+    if (routeLayer) {
+        map.removeLayer(routeLayer);
+    }
+    
+    // Vẽ shipper marker
+    createShipperMarker();
+    
+    // Lấy tất cả đơn hàng và phân loại
+    const allOrdersSorted = orderData.slice().sort((a, b) => a.sequence - b.sequence);
+    const pendingOrders = orderData.filter(o => o.status !== 'delivered');
+    
+    if (pendingOrders.length === 0) {
+        alert('Đã giao hết tất cả đơn hàng!');
+        return;
+    }
+    
+    // Vẽ markers cho TẤT CẢ đơn hàng (đã giao màu xanh lá, chưa giao màu xanh dương)
+    allOrdersSorted.forEach((order) => {
+        const isDelivered = order.status === 'delivered';
+        const markerColor = isDelivered ? '#28a745' : '#007bff';
+        
+        const circleMarker = L.circleMarker([order.lat, order.lon], {
+            color: markerColor,
+            fillColor: markerColor,
+            fillOpacity: 0.8,
+            radius: 10,
+            weight: 3
+        }).addTo(map);
+        
+        circleMarker.bindPopup(`
+            <b>Điểm ${order.sequence}</b><br/>
+            <i class="fas fa-box"></i> Đơn: ${order.id}<br/>
+            <i class="fas fa-user"></i> KH: ${order.customer}<br/>
+            <i class="fas fa-map-marker-alt"></i> ${order.address}
+            ${isDelivered ? '<br/><i class="fas fa-check-circle text-success"></i> <b>Đã giao</b>' : ''}
+        `);
+        
+        const numberLabel = L.marker([order.lat, order.lon], {
+            icon: L.divIcon({
+                className: 'sequence-number',
+                html: `<div style='font-size:11px; color:white; font-weight:bold; text-align:center;'>${order.sequence}</div>`,
+                iconSize: [20, 20],
+                iconAnchor: [10, 10]
+            }),
+            interactive: false
+        }).addTo(map);
+        
+        allMarkers.push(circleMarker);
+        allMarkers.push(numberLabel);
+    });
+    
+    // Tạo route points cho đường ĐI: depot → các điểm giao hàng
+    const outboundPoints = [[10.030874, 105.768299]]; // Bắt đầu từ depot
+    
+    // Thêm TẤT CẢ các điểm theo thứ tự (cả đã giao và chưa giao)
+    allOrdersSorted.forEach(order => {
+        outboundPoints.push([order.lat, order.lon]);
+    });
+    
+    const lastPoint = outboundPoints[outboundPoints.length - 1];
+    const returnPoints = [lastPoint, [10.030874, 105.768299]]; // Đường về: điểm cuối → depot
+    
+    console.log('Outbound Points:', outboundPoints);
+    console.log('Return Points:', returnPoints);
+    
+    // VẼ ĐƯỜNG ĐI (depot → các điểm) - MÀU XANH DƯƠNG
+    if (outboundPoints.length > 1) {
+        const outboundCoords = outboundPoints.map(p => `${p[1]},${p[0]}`).join(';');
+        const outboundUrl = `https://router.project-osrm.org/route/v1/driving/${outboundCoords}?overview=full&geometries=geojson&steps=true`;
+        
+        fetch(outboundUrl)
+            .then(response => response.json())
+            .then(data => {
+                if (data.code === 'Ok' && data.routes && data.routes.length > 0) {
+                    const route = data.routes[0];
+                    const routeCoords = route.geometry.coordinates.map(c => [c[1], c[0]]);
+                    const distance = (route.distance / 1000).toFixed(2);
+                    const duration = Math.round(route.duration / 60);
+                    
+                    const outboundLayer = L.polyline(routeCoords, {
+                        color: '#0066cc',
+                        weight: 5,
+                        opacity: 0.8
+                    }).addTo(map);
+                    
+                    outboundLayer.bindPopup(`
+                        <b>🚚 Đường đi</b><br/>
+                        <i class="fas fa-route"></i> ${distance} km<br/>
+                        <i class="fas fa-clock"></i> ~${duration} phút
+                    `);
+                    
+                    // Mũi tên chỉ hướng đường đi
+                    L.polylineDecorator(outboundLayer, {
+                        patterns: [
+                            {
+                                offset: '10%',
+                                repeat: 100,
+                                symbol: L.Symbol.arrowHead({
+                                    pixelSize: 12,
+                                    polygon: false,
+                                    pathOptions: {
+                                        stroke: true,
+                                        color: '#0066cc',
+                                        weight: 2
+                                    }
+                                })
+                            }
+                        ]
+                    }).addTo(map);
+                }
+            })
+            .catch(error => console.error('Outbound route error:', error));
+    }
+    
+    // VẼ ĐƯỜNG VỀ (điểm cuối → depot) - MÀU ĐỎ, NÉT ĐỨT
+    if (returnPoints.length === 2) {
+        const returnCoords = returnPoints.map(p => `${p[1]},${p[0]}`).join(';');
+        const returnUrl = `https://router.project-osrm.org/route/v1/driving/${returnCoords}?overview=full&geometries=geojson`;
+        
+        fetch(returnUrl)
+            .then(response => response.json())
+            .then(data => {
+                if (data.code === 'Ok' && data.routes && data.routes.length > 0) {
+                    const route = data.routes[0];
+                    const routeCoords = route.geometry.coordinates.map(c => [c[1], c[0]]);
+                    const distance = (route.distance / 1000).toFixed(2);
+                    const duration = Math.round(route.duration / 60);
+                    
+                    const returnLayer = L.polyline(routeCoords, {
+                        color: '#dc3545',
+                        weight: 5,
+                        opacity: 0.8,
+                        dashArray: '10, 10'
+                    }).addTo(map);
+                    
+                    returnLayer.bindPopup(`
+                        <b>🏠 Đường về kho</b><br/>
+                        <i class="fas fa-route"></i> ${distance} km<br/>
+                        <i class="fas fa-clock"></i> ~${duration} phút
+                    `);
+                    
+                    // Mũi tên chỉ hướng đường về
+                    L.polylineDecorator(returnLayer, {
+                        patterns: [
+                            {
+                                offset: '10%',
+                                repeat: 100,
+                                symbol: L.Symbol.arrowHead({
+                                    pixelSize: 12,
+                                    polygon: false,
+                                    pathOptions: {
+                                        stroke: true,
+                                        color: '#dc3545',
+                                        weight: 2
+                                    }
+                                })
+                            }
+                        ]
+                    }).addTo(map);
+                    
+                    // Fit bounds để hiển thị cả 2 đường
+                    const allBounds = [...outboundPoints, ...returnPoints];
+                    if (allBounds.length > 0) {
+                        const bounds = L.latLngBounds(allBounds);
+                        map.fitBounds(bounds.pad(0.1));
+                    }
+                }
+            })
+            .catch(error => console.error('Return route error:', error));
+    } else {
+        drawStraightRoute(routePoints);
+    }
+}
+
+function drawStraightRoute(points) {
+    routeLayer = L.polyline(points, {
+        color: '#007bff',
+        weight: 4,
+        opacity: 0.7,
+        dashArray: '10, 5'
+    }).addTo(map);
+    
+    map.fitBounds(routeLayer.getBounds(), {padding: [50, 50]});
+}
+
+// Vẽ ban đầu
+drawMap();
+</script>
+{% endblock %}

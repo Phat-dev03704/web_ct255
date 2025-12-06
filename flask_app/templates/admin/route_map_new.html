@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bản đồ tuyến {{ van_chuyen.MaVC }} - Admin</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        body { margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        #map { position: absolute; top: 60px; bottom: 0; left: 0; right: 0; }
+        .header-bar {
+            position: fixed; top: 0; left: 0; right: 0; height: 60px;
+            background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); z-index: 1000;
+            display: flex; align-items: center; padding: 0 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-bar">
+        <a href="{{ url_for('admin.routes') }}" class="btn btn-secondary btn-sm">
+            <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+        <h4 class="ms-3 mb-0"><i class="fas fa-map text-primary"></i> Bản đồ tuyến {{ van_chuyen.MaVC }}</h4>
+    </div>
+
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        console.log('Initializing map...');
+        
+        const depotLat = 10.030874;
+        const depotLon = 105.768299;
+        
+        const map = L.map('map').setView([depotLat, depotLon], 13);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 19
+        }).addTo(map);
+        
+        // Depot marker
+        L.marker([depotLat, depotLon], {
+            icon: L.divIcon({
+                className: 'custom-div-icon',
+                html: "<div style='background-color:#dc3545; width:20px; height:20px; border-radius:50%; border:3px solid white; box-shadow:0 0 6px rgba(0,0,0,0.5);'></div>",
+                iconSize: [20, 20],
+                iconAnchor: [10, 10]
+            })
+        }).bindPopup('<b>Depot/Kho</b>').addTo(map);
+        
+        const colors = ['#007bff', '#28a745', '#dc3545', '#ffc107', '#17a2b8', '#6f42c1', '#fd7e14', '#e83e8c'];
+        {% set color_list = ['#007bff', '#28a745', '#dc3545', '#ffc107', '#17a2b8', '#6f42c1', '#fd7e14', '#e83e8c'] %}
+        
+        {% for ctvc in van_chuyen.ct_van_chuyens %}
+        {% set vehicle_index = loop.index %}
+        {% set vehicle_color = color_list[loop.index0 % color_list|length] %}
+        console.log('Vehicle {{ vehicle_index }}: {{ ctvc.MaCTVC }}');
+        
+        {% for dh_ctvc in ctvc.donhang_ctvcs|sort(attribute='ThuTu') %}
+        {% if dh_ctvc.don_hang.Lat and dh_ctvc.don_hang.Lon %}
+        L.circleMarker([{{ dh_ctvc.don_hang.Lat }}, {{ dh_ctvc.don_hang.Lon }}], {
+            color: '{{ vehicle_color }}',
+            fillColor: '{{ vehicle_color }}',
+            fillOpacity: 0.7,
+            radius: 8
+        }).bindPopup('<b>Xe {{ ctvc.MaCTVC }}</b><br>Thứ tự: {{ dh_ctvc.ThuTu }}<br>Đơn: {{ dh_ctvc.don_hang.MaDH }}<br>Địa chỉ: {{ dh_ctvc.don_hang.DiaChi }}').addTo(map);
+        {% endif %}
+        {% endfor %}
+        {% endfor %}
+        
+        console.log('Map ready!');
+    </script>
+</body>
+</html>

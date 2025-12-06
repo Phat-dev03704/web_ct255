@@ -1,0 +1,42 @@
+# Requirements for Vehicle Routing Problem Project
+# Install with: pip install -r install_requirements.txt
+
+# Web Framework
+flask
+flask-sqlalchemy
+
+# Authentication & Security
+bcrypt
+python-dotenv
+
+# Database
+sqlalchemy
+
+# Optimization & OR Tools
+ortools
+pulp
+scipy
+
+# Data Processing & Analysis
+pandas
+numpy
+
+# Visualization
+matplotlib
+seaborn
+folium
+
+# Deep Learning (for ML algorithms)
+torch
+tqdm
+
+# Image Processing
+pillow
+
+# Network & Routing
+requests
+osmnx
+networkx
+
+# Testing & Development
+pytest

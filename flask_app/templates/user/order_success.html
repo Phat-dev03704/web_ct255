@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}Order Placed Successfully - VRP Fruit Store{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-body text-center py-5">
+                    <div class="mb-4">
+                        <i class="fas fa-check-circle text-success" style="font-size: 5rem;"></i>
+                    </div>
+                    
+                    <h1 class="mb-3">Order Placed Successfully!</h1>
+                    <p class="lead text-muted mb-4">Thank you for your order. Your order has been received and is being processed.</p>
+                    
+                    {% if order %}
+                    <div class="card bg-light mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">Order Details</h5>
+                            <div class="row text-start">
+                                <div class="col-md-6">
+                                    <p class="mb-2"><strong>Order ID:</strong> {{ order.MaDH }}</p>
+                                    <p class="mb-2"><strong>Customer:</strong> {{ order.nguoi_dung.TenND if order.nguoi_dung else 'N/A' }}</p>
+                                    <p class="mb-2"><strong>Phone:</strong> {{ order.nguoi_dung.SDT if order.nguoi_dung else 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="mb-2"><strong>Total Amount:</strong> <span class="text-success">{{ "{:,.0f}".format(order.TongTien) }}đ</span></p>
+                                    <p class="mb-2"><strong>Status:</strong> 
+                                        <span class="badge bg-warning">{{ order.TrangThai.value }}</span>
+                                    </p>
+                                    <p class="mb-2"><strong>Order Date:</strong> {{ order.NgayTao.strftime('%d/%m/%Y %H:%M') if order.NgayTao else 'N/A' }}</p>
+                                </div>
+                            </div>
+                            <hr>
+                            <p class="mb-0 small"><strong>Delivery Address:</strong><br>{{ order.DiaChi }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="alert alert-info" role="alert">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Your order will be optimized with other orders for efficient delivery. You will receive updates about your delivery route.
+                    </div>
+                    
+                    <div class="d-flex justify-content-center gap-3 mt-4">
+                        <a href="{{ url_for('customer.home') }}" class="btn btn-success btn-lg">
+                            <i class="fas fa-shopping-bag me-2"></i>Continue Shopping
+                        </a>
+                        <a href="{{ url_for('customer.orders') }}" class="btn btn-outline-secondary btn-lg">
+                            <i class="fas fa-list me-2"></i>View My Orders
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Order Timeline -->
+            <div class="card shadow mt-4 border-0">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">What's Next?</h5>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-success">
+                                <i class="fas fa-check text-white"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h6>Order Received</h6>
+                                <p class="text-muted mb-0 small">Your order has been successfully placed</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-warning">
+                                <i class="fas fa-clock text-white"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h6>Processing</h6>
+                                <p class="text-muted mb-0 small">We're preparing your order and optimizing delivery route</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-secondary">
+                                <i class="fas fa-truck text-white"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h6>Out for Delivery</h6>
+                                <p class="text-muted mb-0 small">Your order will be on its way soon</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-secondary">
+                                <i class="fas fa-box text-white"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h6>Delivered</h6>
+                                <p class="text-muted mb-0 small">Order delivered to your address</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.timeline {
+    position: relative;
+    padding-left: 0;
+}
+
+.timeline-item {
+    display: flex;
+    align-items: start;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.timeline-item:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 18px;
+    top: 40px;
+    bottom: -32px;
+    width: 2px;
+    background: #dee2e6;
+}
+
+.timeline-marker {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    z-index: 1;
+}
+
+.timeline-content {
+    flex-grow: 1;
+    padding-top: 4px;
+}
+
+.timeline-content h6 {
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,399 @@
+================================================================================
+BÁO CÁO KẾT QUẢ POINTER NETWORK TRÊN TẤT CẢ DATASET VRPTW
+================================================================================
+
+Thời gian test: 2025-10-22 14:35:55
+Model: D:\My Studing\Nghiệp vụ thông minh\project\Vehicle Routing Problem\code\algorithm\ML\NeuralCombinatorialOptimization\Pointer-Network\models\pointer_network_best.pth
+Số lượng dataset: 56
+
+THỐNG KÊ TỔNG QUAN:
+--------------------------------------------------------------------------------
+Tổng khoảng cách trung bình: 3418.31
+Số xe trung bình: 9.38
+Thời gian tính toán trung bình: 0.2153s
+Tỷ lệ phục vụ khách hàng: 5600/5600 (100.00%)
+
+THỐNG KÊ THEO TỪNG LOẠI:
+--------------------------------------------------------------------------------
+
+C1:
+  Số dataset: 9
+  Khoảng cách TB: 3212.76
+  Số xe TB: 10.67
+  Thời gian TB: 0.1519s
+  Tỷ lệ phục vụ: 900/900 (100.00%)
+
+C2:
+  Số dataset: 8
+  Khoảng cách TB: 3226.51
+  Số xe TB: 10.25
+  Thời gian TB: 0.2207s
+  Tỷ lệ phục vụ: 800/800 (100.00%)
+
+R1:
+  Số dataset: 12
+  Khoảng cách TB: 3082.18
+  Số xe TB: 8.00
+  Thời gian TB: 0.2333s
+  Tỷ lệ phục vụ: 1200/1200 (100.00%)
+
+R2:
+  Số dataset: 11
+  Khoảng cách TB: 3179.43
+  Số xe TB: 8.55
+  Thời gian TB: 0.2107s
+  Tỷ lệ phục vụ: 1100/1100 (100.00%)
+
+RC1:
+  Số dataset: 8
+  Khoảng cách TB: 4012.08
+  Số xe TB: 9.62
+  Thời gian TB: 0.2195s
+  Tỷ lệ phục vụ: 800/800 (100.00%)
+
+RC2:
+  Số dataset: 8
+  Khoảng cách TB: 4080.25
+  Số xe TB: 10.00
+  Thời gian TB: 0.2565s
+  Tỷ lệ phục vụ: 800/800 (100.00%)
+
+KẾT QUẢ CHI TIẾT:
+--------------------------------------------------------------------------------
+
+C101 (C1):
+  Khoảng cách: 3144.66
+  Số xe: 11
+  Khách hàng: 100/100
+  Thời gian: 0.1817s
+
+C102 (C1):
+  Khoảng cách: 2935.64
+  Số xe: 10
+  Khách hàng: 100/100
+  Thời gian: 0.1365s
+
+C103 (C1):
+  Khoảng cách: 3205.61
+  Số xe: 11
+  Khách hàng: 100/100
+  Thời gian: 0.1324s
+
+C104 (C1):
+  Khoảng cách: 3361.55
+  Số xe: 11
+  Khách hàng: 100/100
+  Thời gian: 0.1374s
+
+C105 (C1):
+  Khoảng cách: 3133.62
+  Số xe: 11
+  Khách hàng: 100/100
+  Thời gian: 0.1243s
+
+C106 (C1):
+  Khoảng cách: 3248.76
+  Số xe: 10
+  Khách hàng: 100/100
+  Thời gian: 0.1960s
+
+C107 (C1):
+  Khoảng cách: 3358.72
+  Số xe: 11
+  Khách hàng: 100/100
+  Thời gian: 0.1294s
+
+C108 (C1):
+  Khoảng cách: 3258.30
+  Số xe: 10
+  Khách hàng: 100/100
+  Thời gian: 0.1333s
+
+C109 (C1):
+  Khoảng cách: 3267.95
+  Số xe: 11
+  Khách hàng: 100/100
+  Thời gian: 0.1959s
+
+C201 (C2):
+  Khoảng cách: 3388.90
+  Số xe: 10
+  Khách hàng: 100/100
+  Thời gian: 0.2568s
+
+C202 (C2):
+  Khoảng cách: 3104.55
+  Số xe: 10
+  Khách hàng: 100/100
+  Thời gian: 0.1927s
+
+C203 (C2):
+  Khoảng cách: 3273.72
+  Số xe: 10
+  Khách hàng: 100/100
+  Thời gian: 0.2713s
+
+C204 (C2):
+  Khoảng cách: 3531.97
+  Số xe: 10
+  Khách hàng: 100/100
+  Thời gian: 0.2802s
+
+C205 (C2):
+  Khoảng cách: 3209.61
+  Số xe: 11
+  Khách hàng: 100/100
+  Thời gian: 0.1744s
+
+C206 (C2):
+  Khoảng cách: 3035.10
+  Số xe: 11
+  Khách hàng: 100/100
+  Thời gian: 0.1942s
+
+C207 (C2):
+  Khoảng cách: 3249.29
+  Số xe: 10
+  Khách hàng: 100/100
+  Thời gian: 0.1977s
+
+C208 (C2):
+  Khoảng cách: 3018.91
+  Số xe: 10
+  Khách hàng: 100/100
+  Thời gian: 0.1983s
+
+R101 (R1):
+  Khoảng cách: 3046.41
+  Số xe: 8
+  Khách hàng: 100/100
+  Thời gian: 0.2779s
+
+R102 (R1):
+  Khoảng cách: 3093.93
+  Số xe: 8
+  Khách hàng: 100/100
+  Thời gian: 0.1948s
+
+R103 (R1):
+  Khoảng cách: 2994.42
+  Số xe: 8
+  Khách hàng: 100/100
+  Thời gian: 0.2261s
+
+R104 (R1):
+  Khoảng cách: 3151.67
+  Số xe: 8
+  Khách hàng: 100/100
+  Thời gian: 0.5683s
+
+R105 (R1):
+  Khoảng cách: 3033.24
+  Số xe: 8
+  Khách hàng: 100/100
+  Thời gian: 0.2031s
+
+R106 (R1):
+  Khoảng cách: 3171.73
+  Số xe: 8
+  Khách hàng: 100/100
+  Thời gian: 0.1721s
+
+R107 (R1):
+  Khoảng cách: 3000.91
+  Số xe: 8
+  Khách hàng: 100/100
+  Thời gian: 0.2202s
+
+R108 (R1):
+  Khoảng cách: 3001.99
+  Số xe: 8
+  Khách hàng: 100/100
+  Thời gian: 0.1667s
+
+R109 (R1):
+  Khoảng cách: 3290.08
+  Số xe: 8
+  Khách hàng: 100/100
+  Thời gian: 0.1806s
+
+R110 (R1):
+  Khoảng cách: 3203.95
+  Số xe: 8
+  Khách hàng: 100/100
+  Thời gian: 0.2233s
+
+R111 (R1):
+  Khoảng cách: 2897.45
+  Số xe: 8
+  Khách hàng: 100/100
+  Thời gian: 0.1834s
+
+R112 (R1):
+  Khoảng cách: 3100.39
+  Số xe: 8
+  Khách hàng: 100/100
+  Thời gian: 0.1829s
+
+R201 (R2):
+  Khoảng cách: 3245.66
+  Số xe: 8
+  Khách hàng: 100/100
+  Thời gian: 0.1727s
+
+R202 (R2):
+  Khoảng cách: 3031.43
+  Số xe: 9
+  Khách hàng: 100/100
+  Thời gian: 0.1839s
+
+R203 (R2):
+  Khoảng cách: 3334.62
+  Số xe: 8
+  Khách hàng: 100/100
+  Thời gian: 0.2454s
+
+R204 (R2):
+  Khoảng cách: 3003.35
+  Số xe: 8
+  Khách hàng: 100/100
+  Thời gian: 0.2500s
+
+R205 (R2):
+  Khoảng cách: 3442.35
+  Số xe: 8
+  Khách hàng: 100/100
+  Thời gian: 0.1892s
+
+R206 (R2):
+  Khoảng cách: 3290.56
+  Số xe: 9
+  Khách hàng: 100/100
+  Thời gian: 0.1719s
+
+R207 (R2):
+  Khoảng cách: 3224.41
+  Số xe: 9
+  Khách hàng: 100/100
+  Thời gian: 0.2116s
+
+R208 (R2):
+  Khoảng cách: 3010.11
+  Số xe: 9
+  Khách hàng: 100/100
+  Thời gian: 0.2118s
+
+R209 (R2):
+  Khoảng cách: 3144.20
+  Số xe: 9
+  Khách hàng: 100/100
+  Thời gian: 0.2285s
+
+R210 (R2):
+  Khoảng cách: 3236.61
+  Số xe: 9
+  Khách hàng: 100/100
+  Thời gian: 0.2791s
+
+R211 (R2):
+  Khoảng cách: 3010.42
+  Số xe: 8
+  Khách hàng: 100/100
+  Thời gian: 0.1733s
+
+RC101 (RC1):
+  Khoảng cách: 4125.10
+  Số xe: 9
+  Khách hàng: 100/100
+  Thời gian: 0.1994s
+
+RC102 (RC1):
+  Khoảng cách: 4083.00
+  Số xe: 10
+  Khách hàng: 100/100
+  Thời gian: 0.1769s
+
+RC103 (RC1):
+  Khoảng cách: 3879.57
+  Số xe: 10
+  Khách hàng: 100/100
+  Thời gian: 0.2193s
+
+RC104 (RC1):
+  Khoảng cách: 4086.89
+  Số xe: 10
+  Khách hàng: 100/100
+  Thời gian: 0.2326s
+
+RC105 (RC1):
+  Khoảng cách: 4101.28
+  Số xe: 10
+  Khách hàng: 100/100
+  Thời gian: 0.1828s
+
+RC106 (RC1):
+  Khoảng cách: 4046.99
+  Số xe: 9
+  Khách hàng: 100/100
+  Thời gian: 0.2745s
+
+RC107 (RC1):
+  Khoảng cách: 3776.28
+  Số xe: 9
+  Khách hàng: 100/100
+  Thời gian: 0.2463s
+
+RC108 (RC1):
+  Khoảng cách: 3997.54
+  Số xe: 10
+  Khách hàng: 100/100
+  Thời gian: 0.2244s
+
+RC201 (RC2):
+  Khoảng cách: 3913.69
+  Số xe: 10
+  Khách hàng: 100/100
+  Thời gian: 0.2724s
+
+RC202 (RC2):
+  Khoảng cách: 4189.76
+  Số xe: 10
+  Khách hàng: 100/100
+  Thời gian: 0.2030s
+
+RC203 (RC2):
+  Khoảng cách: 3974.10
+  Số xe: 10
+  Khách hàng: 100/100
+  Thời gian: 0.2670s
+
+RC204 (RC2):
+  Khoảng cách: 4094.00
+  Số xe: 10
+  Khách hàng: 100/100
+  Thời gian: 0.2689s
+
+RC205 (RC2):
+  Khoảng cách: 4201.59
+  Số xe: 10
+  Khách hàng: 100/100
+  Thời gian: 0.2078s
+
+RC206 (RC2):
+  Khoảng cách: 4171.74
+  Số xe: 10
+  Khách hàng: 100/100
+  Thời gian: 0.3294s
+
+RC207 (RC2):
+  Khoảng cách: 3910.30
+  Số xe: 10
+  Khách hàng: 100/100
+  Thời gian: 0.2031s
+
+RC208 (RC2):
+  Khoảng cách: 4186.80
+  Số xe: 10
+  Khách hàng: 100/100
+  Thời gian: 0.3004s
+

@@ -1,0 +1,105 @@
+====================================================================================================
+BÁO CÁO TEST CLARKE-WRIGHT SAVINGS ALGORITHM TRÊN 56 DATASETS
+====================================================================================================
+
+Ngày giờ test: 2025-10-15 23:09:58
+Tổng số datasets: 56
+Thành công: 55 (98.2%)
+Thất bại: 1 (1.8%)
+Tổng thời gian: 289.78s (4.83 phút)
+Thời gian trung bình: 5.17s/dataset
+
+====================================================================================================
+CHI TIẾT KẾT QUẢ THEO CATEGORY
+====================================================================================================
+
+
+C1:
+----------------------------------------------------------------------------------------------------
+Dataset         Status                         Vehicles   Distance        Time (s)  
+----------------------------------------------------------------------------------------------------
+C101            Feasible (Clarke-Wright)       15         1127.48         0.06      
+C102            Feasible (Clarke-Wright)       15         1118.97         0.06      
+C103            Feasible (Clarke-Wright)       13         1055.61         0.10      
+C104            Error: '<' not supported between instances of 'numpy.ndarray' and 'str' 0          0.00            0.00      
+C105            Feasible (Clarke-Wright)       15         1123.28         0.10      
+C106            Feasible (Clarke-Wright)       13         1033.86         0.09      
+C107            Feasible (Clarke-Wright)       14         1089.78         0.09      
+C108            Feasible (Clarke-Wright)       11         913.06          0.07      
+C109            Feasible (Clarke-Wright)       11         900.85          0.07      
+
+C2:
+----------------------------------------------------------------------------------------------------
+Dataset         Status                         Vehicles   Distance        Time (s)  
+----------------------------------------------------------------------------------------------------
+C201            Feasible (Clarke-Wright)       14         1295.15         0.11      
+C202            Feasible (Clarke-Wright)       12         1139.56         0.08      
+C203            Feasible (Clarke-Wright)       11         1094.51         0.06      
+C204            Feasible (Clarke-Wright)       10         989.82          0.15      
+C205            Feasible (Clarke-Wright)       10         1039.12         0.07      
+C206            Feasible (Clarke-Wright)       11         1035.23         0.09      
+C207            Feasible (Clarke-Wright)       10         1024.41         0.08      
+C208            Feasible (Clarke-Wright)       11         1046.77         0.08      
+
+R1:
+----------------------------------------------------------------------------------------------------
+Dataset         Status                         Vehicles   Distance        Time (s)  
+----------------------------------------------------------------------------------------------------
+R101            Feasible (Clarke-Wright)       31         2141.68         0.28      
+R102            Feasible (Clarke-Wright)       27         1835.80         0.25      
+R103            Feasible (Clarke-Wright)       22         1565.92         0.56      
+R104            Feasible (Clarke-Wright)       16         1236.33         0.12      
+R105            Feasible (Clarke-Wright)       21         1640.99         0.15      
+R106            Feasible (Clarke-Wright)       20         1498.63         0.16      
+R107            Feasible (Clarke-Wright)       17         1350.13         0.10      
+R108            Feasible (Clarke-Wright)       14         1146.15         0.14      
+R109            Feasible (Clarke-Wright)       16         1334.86         0.11      
+R110            Feasible (Clarke-Wright)       14         1198.44         0.08      
+R111            Feasible (Clarke-Wright)       15         1247.49         0.12      
+R112            Feasible (Clarke-Wright)       13         1065.24         0.07      
+
+R2:
+----------------------------------------------------------------------------------------------------
+Dataset         Status                         Vehicles   Distance        Time (s)  
+----------------------------------------------------------------------------------------------------
+R201            Feasible (Clarke-Wright)       15         1396.53         0.10      
+R202            Feasible (Clarke-Wright)       14         1263.90         0.09      
+R203            Feasible (Clarke-Wright)       12         1101.65         0.08      
+R204            Feasible (Clarke-Wright)       9          924.03          0.05      
+R205            Feasible (Clarke-Wright)       13         1161.37         0.09      
+R206            Feasible (Clarke-Wright)       11         1102.42         0.07      
+R207            Feasible (Clarke-Wright)       10         999.53          0.19      
+R208            Feasible (Clarke-Wright)       9          913.74          0.07      
+R209            Feasible (Clarke-Wright)       11         1064.24         0.10      
+R210            Feasible (Clarke-Wright)       11         1091.21         0.09      
+R211            Feasible (Clarke-Wright)       8          914.19          0.06      
+
+RC1:
+----------------------------------------------------------------------------------------------------
+Dataset         Status                         Vehicles   Distance        Time (s)  
+----------------------------------------------------------------------------------------------------
+RC101           Feasible (Clarke-Wright)       23         1999.35         0.17      
+RC102           Feasible (Clarke-Wright)       21         1876.20         0.29      
+RC103           Feasible (Clarke-Wright)       16         1542.27         0.16      
+RC104           Feasible (Clarke-Wright)       14         1324.05         0.10      
+RC105           Feasible (Clarke-Wright)       23         1984.79         0.39      
+RC106           Feasible (Clarke-Wright)       17         1574.28         0.15      
+RC107           Feasible (Clarke-Wright)       15         1439.94         0.08      
+RC108           Feasible (Clarke-Wright)       13         1279.56         0.19      
+
+RC2:
+----------------------------------------------------------------------------------------------------
+Dataset         Status                         Vehicles   Distance        Time (s)  
+----------------------------------------------------------------------------------------------------
+RC201           Feasible (Clarke-Wright)       16         1657.49         0.20      
+RC202           Feasible (Clarke-Wright)       14         1473.02         0.12      
+RC203           Feasible (Clarke-Wright)       12         1232.48         0.39      
+RC204           Feasible (Clarke-Wright)       10         1082.66         0.07      
+RC205           Feasible (Clarke-Wright)       13         1422.66         0.11      
+RC206           Feasible (Clarke-Wright)       11         1334.61         0.10      
+RC207           Feasible (Clarke-Wright)       12         1327.68         0.10      
+RC208           Feasible (Clarke-Wright)       10         1068.69         0.11      
+
+====================================================================================================
+KẾT THÚC BÁO CÁO
+====================================================================================================
